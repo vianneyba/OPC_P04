@@ -1,7 +1,7 @@
 import uuid
 
 class Player:
-    def __init__(self, player_dic):
+    def __init__(self, player_dic={}):
         self.id = str(uuid.uuid1())
         for attr_name, attr_value in player_dic.items():
             setattr(self, attr_name, attr_value)
@@ -11,6 +11,7 @@ class Player:
             'id': self.id,
             'firstname': self.firstname,
             'lastname': self.lastname,
+            'birthday': self.birthday,
             'gender': self.gender,
             'rating': self.rating,
         }
@@ -23,4 +24,5 @@ class Player:
             f'nom: {self.lastname}\n'
             f'genre: {self.gender}\n'
             f'classement: {self.rating}'
+            f'classement: {self.birthday}'
         )

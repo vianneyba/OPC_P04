@@ -8,7 +8,7 @@ class PlayerManagement:
     table = db.table('players')
 
     @classmethod
-    def get_all(self, type_order):
+    def get_all(self, type_order='by_last_name'):
         all =  self.table.all()
 
         if type_order == 'by_last_name':
