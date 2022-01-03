@@ -1,0 +1,5 @@
+doc/
+env/
+test.py
+db.json
+__pycache__
