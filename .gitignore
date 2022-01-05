@@ -1,5 +1,7 @@
+flake8_report/
 doc/
 env/
 test.py
 db.json
 __pycache__
+

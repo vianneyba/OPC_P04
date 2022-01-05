@@ -1,16 +1,13 @@
 from tinydb import TinyDB, Query
-import uuid
-import copy
 
 db = TinyDB('db.json')
+
 
 class PlayerManagement:
     table = db.table('players')
 
     @classmethod
     def get_all(self, type_order='by_last_name'):
-        all =  self.table.all()
-
         if type_order == 'by_last_name':
             return sorted(self.table.all(), key=lambda k: k['lastname'])
         elif type_order == 'by_rating':
@@ -30,6 +27,7 @@ class PlayerManagement:
     def save(self, user):
         self.table.insert(user)
 
+
 class TournamentManagement:
     table = db.table('tournaments')
 
@@ -45,3 +43,19 @@ class TournamentManagement:
     @classmethod
     def save(self, tournament):
         self.table.insert(tournament)
+
+
+class RoundManagement:
+    table = db.table('rounds')
+
+    @classmethod
+    def save(self, round):
+        self.table.insert(round)
+
+
+class MatchManagement:
+    table = db.table('matchs')
+
+    @classmethod
+    def save(self, match):
+        self.table.insert(match)
