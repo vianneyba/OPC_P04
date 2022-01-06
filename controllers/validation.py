@@ -1,5 +1,6 @@
 from dateutil.parser import parse
 
+
 class Validation:
 
     @classmethod
@@ -28,7 +29,7 @@ class Validation:
 
     @classmethod
     def rating(self, rating, error):
-        message= 'le classement est un nombre positif'
+        message = 'le classement est un nombre positif'
         try:
             rating = int(rating)
             if rating < 1:
@@ -55,21 +56,21 @@ class Validation:
             error.message = 'le lieu n\'est pas conforme'
             error.error = True
         else:
-            error.next = True    
+            error.next = True
 
     @classmethod
     def tournament_date_start(self, date_start, error):
-        try: 
-            d= parse(date_start, fuzzy=False)
+        try:
+            d = parse(date_start, fuzzy=False)
             error.next = True
-            return d
+            return "{}/{}/{}".format(d.day, d.month, d.year)
         except ValueError:
             error.message = 'la date n\'est pas conforme'
             error.error = True
 
     @classmethod
     def tournament_duration(self, duration, error):
-        message= 'le nombre n\'est pas conforme'
+        message = 'le nombre n\'est pas conforme'
         if duration == '':
             error.next = True
             return 1
@@ -84,11 +85,11 @@ class Validation:
                 return duration
         except ValueError:
             error.error = True
-            error.message = message 
+            error.message = message
 
     @classmethod
     def tournament_rounds(self, nbr_rounds, error):
-        message= 'le nombre n\'est pas conforme'
+        message = 'le nombre n\'est pas conforme'
         if nbr_rounds == '':
             error.next = True
             return 4
@@ -103,11 +104,11 @@ class Validation:
                 return nbr_rounds
         except ValueError:
             error.error = True
-            error.message = message 
+            error.message = message
 
     @classmethod
     def tournament_ctr_time(self, ctr_time, error):
-        error.message= 'le côntrole du temps n\'est pas conforme'
+        error.message = 'le côntrole du temps n\'est pas conforme'
         if ctr_time == '1':
             error.next = True
             return 'bullet'
@@ -125,8 +126,4 @@ class Validation:
 
     @classmethod
     def tournament_description(self, description, error):
-        if True == False:
-            error.message = 'la description n\'est pas conforme'
-            error.error = True
-        else:
-            error.next = True    
+        error.next = True

@@ -17,16 +17,16 @@ class Match:
         return serialized
 
     def get_tuple_players(self):
-        p_one = [self.player_one, self.player_one_pt]
-        p_two = [self.player_two, self.player_two_pt]
+        p_one = [self.player_one.id, self.player_one_pt]
+        p_two = [self.player_two.id, self.player_two_pt]
         return (p_one, p_two)
 
     def add_player(self, player, point=0):
         if self.player_one is None:
-            self.player_one = player.id
+            self.player_one = player
             self.player_one_pt = point
         else:
-            self.player_two = player.id
+            self.player_two = player
             self.player_two_pt = point
 
     def __str__(self):

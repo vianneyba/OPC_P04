@@ -2,20 +2,20 @@ from models.linktracking import LinkTracking
 from models.match import Match
 from models.round import Round
 from models.player import Player
-from controllers.validation import Validation
+from controllers.validation import Validation as Vld
 from controllers.player import PlayerController
-from services.services import PlayerManagement, RoundManagement, MatchManagement, TournamentManagement
+from services.services import PlayerManagement, RoundManagement
+from services.services import MatchManagement, TournamentManagement
 from models.tournament import Tournament
+from config import DEFAULT_NBR_PLAYER
 
 
 class TournamentController:
-    linktracking = LinkTracking()
+    lnk = LinkTracking()
 
     @classmethod
     def save(self, tournament):
-        print(type(tournament))
         for player in tournament.players:
-            print(f'player name= {player.firstname}')
             PlayerManagement.save(player.serialize())
 
         for round_t in tournament.rounds:
@@ -26,58 +26,64 @@ class TournamentController:
         TournamentManagement.save(tournament.serialize())
 
     @classmethod
-    def add_tournament(self, menu_view):
-        new_tournament = Tournament()
+    def add_tournament(self, view):
+        tournament = Tournament()
 
-        menu_view.display_tournament_new()
+        view.display_tournament_new()
 
-        self.linktracking.init()
-        while self.linktracking.next is False:
-            new_tournament.name = menu_view.display_tournament_name(self.linktracking)
-            Validation.tournament_name(new_tournament.name, self.linktracking)
+        self.lnk.init()
+        while self.lnk.next is False:
+            message = 'entrer le nom du tournoi: '
+            tournament.name = view.field_text(self.lnk, message)
+            Vld.tournament_name(tournament.name, self.lnk)
 
-        self.linktracking.init()
-        while self.linktracking.next is False:
-            new_tournament.place = menu_view.display_tournament_place(self.linktracking)
-            Validation.tournament_place(new_tournament.place, self.linktracking)
+        self.lnk.init()
+        while self.lnk.next is False:
+            message = 'entrer le lieu du tournoi: '
+            tournament.place = view.field_text(self.lnk, message)
+            Vld.tournament_place(tournament.place, self.lnk)
 
-        self.linktracking.init()
-        while self.linktracking.next is False:
-            new_date = menu_view.display_tournament_date_start(self.linktracking)
-            new_tournament.start_date = Validation.tournament_date_start(new_date, self.linktracking)
+        self.lnk.init()
+        while self.lnk.next is False:
+            message = 'entrer la date du début du tournoi (jj/mm/yyyy): '
+            new_date = view.field_text(self.lnk, message)
+            tournament.start_date = Vld.tournament_date_start(new_date, self.lnk)
 
-        self.linktracking.init()
-        while self.linktracking.next is False:
-            nbr_days = menu_view.display_tournament_duration(self.linktracking)
-            new_tournament.nbr_days = Validation.tournament_duration(nbr_days, self.linktracking)
+        self.lnk.init()
+        while self.lnk.next is False:
+            message = 'combien de jour durera la tournoi [1]: '
+            nbr_days = view.field_text(self.lnk, message)
+            tournament.nbr_days = Vld.tournament_duration(nbr_days, self.lnk)
 
-        self.linktracking.init()
-        while self.linktracking.next is False:
-            nbr_rounds = menu_view.display_tournament_rounds(self.linktracking)
-            new_tournament.nbr_rounds = Validation.tournament_rounds(nbr_rounds, self.linktracking)
+        self.lnk.init()
+        while self.lnk.next is False:
+            message = 'combien de tours [4]: '
+            nbr_rounds = view.field_text(self.lnk, message)
+            tournament.nbr_rounds = Vld.tournament_rounds(nbr_rounds, self.lnk)
 
-        self.linktracking.init()
-        while self.linktracking.next is False:
-            ctr_time = menu_view.display_tournament_ctr_time(self.linktracking)
-            new_tournament.ctr_time = Validation.tournament_ctr_time(ctr_time, self.linktracking)
+        self.lnk.init()
+        while self.lnk.next is False:
+            message = 'côntrole du temps ([1] Bullet, [2] Blitz, [3] Coup rapide): '
+            ctr_time = view.field_text(self.lnk, message)
+            tournament.ctr_time = Vld.tournament_ctr_time(ctr_time, self.lnk)
 
-        self.linktracking.init()
-        while self.linktracking.next is False:
-            new_tournament.description = menu_view.display_tournament_description(self.linktracking)
-            Validation.tournament_description(new_tournament.description, self.linktracking)
+        self.lnk.init()
+        while self.lnk.next is False:
+            message = 'entrer une description: '
+            tournament.description = view.field_text(self.lnk, message)
+            Vld.tournament_description(tournament.description, self.lnk)
 
-        self.linktracking.init()
-        while self.linktracking.next is False:
-            while new_tournament.nbr_players() < 2:
-                new_player = PlayerController.add_player(menu_view, new_tournament.nbr_players()+1)
-                PlayerManagement.save(new_player.serialize())
-                new_tournament.add_player(new_player)
+        self.lnk.init()
+        while self.lnk.next is False:
+            while tournament.count_players() < DEFAULT_NBR_PLAYER:
+                new_player = PlayerController.add_player(view, tournament.count_players()+1)
+                tournament.add_player(new_player)
 
-            self.linktracking.next = True
+            self.lnk.next = True
 
-        my_round = RoundController.create_round(new_tournament.export_players(), 'round 1')
-        new_tournament.add_round(my_round)
-        return new_tournament
+        my_round = RoundController.create_round(tournament.export_players(), 'round 1')
+        tournament.add_round(my_round)
+        return tournament
 
 
 class RoundController:

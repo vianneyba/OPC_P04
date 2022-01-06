@@ -41,7 +41,7 @@ class Tournament:
             rounds_id.append(round_t.id)
         return rounds_id
 
-    def nbr_players(self):
+    def count_players(self):
         return len(self.players)
 
     def __str__(self):
