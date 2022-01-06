@@ -1,11 +1,26 @@
 from models.linktracking import LinkTracking
 from controllers.validation import Validation
 from models.player import Player
+from services.services import PlayerManagement as Player_M
 
 
 class PlayerController:
 
     lnk = LinkTracking()
+
+    @classmethod
+    def get_all_players_by_rating(self):
+        return sorted(Player.all_players, key=lambda x: x.rating)
+
+    @classmethod
+    def get_all_players_by_name(self):
+        return sorted(Player.all_players, key=lambda x: x.lastname)
+
+    @classmethod
+    def import_all_players(self):
+        players = Player_M.get_all()
+        for player in players:
+            Player(player)
 
     @classmethod
     def add_player(self, view, nbr=1):

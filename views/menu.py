@@ -51,10 +51,10 @@ class MenuView:
         print('{:^12} | {:^12} | {:^5} | {:^5}'.format("prénom", "nom", "genre", "place"))
         for player in players:
             new_player = {
-                'firstname': player['firstname'],
-                'lastname': player['lastname'],
-                'gender': player['gender'],
-                'rating': player['rating']}
+                'firstname': player.firstname,
+                'lastname': player.lastname,
+                'gender': player.gender,
+                'rating': player.rating}
             print('{:^12} | {:^12} | {:^5} | {:^5}'.format(new_player["firstname"], new_player["lastname"], new_player["gender"], new_player["rating"]))
 
     def display_player(self, player):

@@ -1,19 +1,20 @@
 from services.services import PlayerManagement
-from controllers.player import PlayerController
+from controllers.player import PlayerController as Player_C
 from controllers.tournament import TournamentController as Tournament_C
 from models.linktracking import LinkTracking
 
 
 class Controller:
     def __init__(self, menu_view):
+        self.list_player = []
         self.list_tournament = []
-        self.menu_view = menu_view
+        self.view = menu_view
         self.lnk = LinkTracking()
 
     def run(self):
         while True:
             if self.lnk.page == '':
-                select = self.menu_view.display_menu()
+                select = self.view.display_menu()
                 if select == '1':
                     self.lnk.page = 'new_tournament'
                 elif select == '2':
@@ -26,11 +27,11 @@ class Controller:
                     break
 
             if self.lnk.page == 'new_tournament':
-                new_tournament = Tournament_C.add_tournament(self.menu_view)
+                new_tournament = Tournament_C.add_tournament(self.view)
                 self.list_tournament.append(new_tournament)
                 self.lnk.page = ''
             elif self.lnk.page == 'player':
-                select = self.menu_view.display_menu_player()
+                select = self.view.display_menu_player()
                 if select == '1':
                     self.lnk.sub_page = 'add_player'
                 elif select == '2':
@@ -42,17 +43,18 @@ class Controller:
                     self.lnk.sub_page = ''
 
                 if self.lnk.sub_page == 'add_player':
-                    new_player = PlayerController.add_player(self.menu_view)
+                    new_player = Player_C.add_player(self.view)
                     PlayerManagement.save(new_player.serialize())
                 elif self.lnk.sub_page == 'list_player_by_last_name':
-                    players = PlayerManagement.get_all('by_last_name')
-                    self.menu_view.display_list_players(players)
+                    players = Player_C.get_all_players_by_name()
+                    self.view.display_list_players(players)
                 elif self.lnk.sub_page == 'list_player_by_rating':
-                    players = PlayerManagement.get_all('by_rating')
-                    self.menu_view.display_list_players(players)
+                    players = Player_C.get_all_players_by_rating()
+                    self.view.display_list_players(players)
             elif self.lnk.page == 'export':
                 for tournament in self.list_tournament:
                     Tournament_C.save(tournament)
                 self.lnk.page = ''
             elif self.lnk.page == 'import':
+                Player_C.import_all_players()
                 self.lnk.page = ''

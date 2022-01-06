@@ -1,10 +1,15 @@
 import uuid
 
+
 class Player:
+
+    all_players = []
+
     def __init__(self, player_dic={}):
         self.id = str(uuid.uuid1())
         for attr_name, attr_value in player_dic.items():
             setattr(self, attr_name, attr_value)
+        self.all_players.append(self)
 
     def serialize(self):
         serialized = {
@@ -13,9 +18,9 @@ class Player:
             'lastname': self.lastname,
             'birthday': self.birthday,
             'gender': self.gender,
-            'rating': self.rating,
+            'rating': self.rating
         }
-        return serialized        
+        return serialized
 
     def __str__(self):
         return(
