@@ -31,57 +31,53 @@ class TournamentController:
 
         view.display_tournament_new()
 
-        self.lnk.init()
-        while self.lnk.next is False:
-            message = 'Entrer le nom du tournoi: '
-            tournament.name = view.field_text(self.lnk, message)
-            Vld.tournament_name(tournament.name, self.lnk)
+        message = 'Entrer le nom du tournoi: '
+        tournament.name = self.form(
+            self, view, message, Vld.tournament_name
+        )
 
-        self.lnk.init()
-        while self.lnk.next is False:
-            message = 'Entrer le lieu du tournoi: '
-            tournament.place = view.field_text(self.lnk, message)
-            Vld.tournament_place(tournament.place, self.lnk)
+        message = 'Entrer le lieu du tournoi: '
+        tournament.place = self.form(self, view, message, Vld.tournament_place)
 
-        self.lnk.init()
-        while self.lnk.next is False:
-            message = 'Entrer la date du début du tournoi (jj/mm/yyyy): '
-            new_date = view.field_text(self.lnk, message)
-            tournament.start_date = Vld.tournament_date_start(new_date, self.lnk)
+        message = 'Entrer la date du début du tournoi (jj/mm/yyyy): '
+        tournament.start_date = self.form(
+            self, view, message, Vld.tournament_date_start
+        )
 
-        self.lnk.init()
-        while self.lnk.next is False:
-            message = 'Combien de jour durera la tournoi [1]: '
-            nbr_days = view.field_text(self.lnk, message)
-            tournament.nbr_days = Vld.tournament_duration(nbr_days, self.lnk)
+        message = 'Combien de jour durera la tournoi [1]: '
+        tournament.nbr_days = self.form(
+            self, view, message, Vld.tournament_duration
+        )
 
-        self.lnk.init()
-        while self.lnk.next is False:
-            message = 'Nombre de tours [4]: '
-            nbr_rounds = view.field_text(self.lnk, message)
-            tournament.nbr_rounds = Vld.tournament_rounds(nbr_rounds, self.lnk)
+        message = 'Nombre de tours [4]: '
+        tournament.nbr_rounds = self.form(
+            self, view, message, Vld.tournament_rounds
+            )
 
-        self.lnk.init()
-        while self.lnk.next is False:
-            message = 'Côntrole du temps ([1] Bullet, [2] Blitz, [3] Coup rapide): '
-            ctr_time = Vld.tournament_ctr_time(view.field_text(self.lnk, message), self.lnk)
-            tournament.ctr_time = self.get_ctr_time(self, ctr_time)
+        message = 'Côntrole du temps ([1] Bullet, [2] Blitz, [3] Coup rapide): '
+        ctr_time = self.form(
+            self, view, message, Vld.tournament_ctr_time
+        )
+        tournament.ctr_time = self.get_ctr_time(self, ctr_time)
 
-        self.lnk.init()
-        while self.lnk.next is False:
-            message = 'Entrer une description: '
-            tournament.description = view.field_text(self.lnk, message)
-            Vld.tournament_description(tournament.description, self.lnk)
+        message = 'Entrer une description: '
+        tournament.description = self.form(
+            self, view, message, Vld.tournament_description
+        )
 
         self.lnk.init()
         while self.lnk.next is False:
             while tournament.count_players() < DEFAULT_NBR_PLAYER:
-                new_player = PlayerController.add_player(view, tournament.count_players()+1)
+                new_player = PlayerController.add_player(
+                    view, tournament.count_players()+1
+                )
                 tournament.add_player(new_player)
 
             self.lnk.next = True
 
-        my_round = RoundController.create_round(tournament.export_players(), 'round 1')
+        my_round = RoundController.create_round(
+            tournament.export_players(), 'round 1'
+        )
         tournament.add_round(my_round)
         return tournament
 
@@ -110,7 +106,9 @@ class TournamentController:
                     match = MatchManagement.get_by_id(match_id)
                     new_match = Match(match)
                     for tuple_player in match['players']:
-                        new_match.add_player(PlayerController.get_by_id(tuple_player[0]), tuple_player[1])
+                        new_match.add_player(
+                            PlayerController.get_by_id(tuple_player[0]), tuple_player[1]
+                        )
                     my_round.add_match(new_match)
                 t.add_round(my_round)
 
@@ -146,15 +144,21 @@ class TournamentController:
             select = view.display_edit_tournament_menu()
             if select == '2':
                 message = f'Entrer le nouveau nom du tournoi [{tournament.name}]: '
-                tournament.name = self.form(self, view, message, Vld.tournament_name)
+                tournament.name = self.form(
+                    self, view, message, Vld.tournament_name
+                )
             if select == '3':
                 self.lnk.init()
                 while self.lnk.next is False:
                     message = 'Entrer la nouvelle description: '
-                    tournament.description = self.form(self, view, message, Vld.tournament_ctr_time)
+                    tournament.description = self.form(
+                        self, view, message, Vld.tournament_ctr_time
+                    )
             if select == '4':
                 message = 'Côntrole du temps ([1] Bullet, [2] Blitz, [3] Coup rapide): '
-                ctr_time = self.form(self, view, message, Vld.tournament_ctr_time)
+                ctr_time = self.form(
+                    self, view, message, Vld.tournament_ctr_time
+                )
                 tournament.ctr_time = self.get_ctr_time(self, ctr_time)
         self.lnk.init()
 
