@@ -3,17 +3,24 @@ from datetime import datetime
 
 
 class Round:
-    def __init__(self, name):
+
+    all_rounds = []
+
+    def __init__(self, round_dic={}):
         self.id = str(uuid.uuid1())
-        self.name = name
+        for attr_name, attr_value in round_dic.items():
+            setattr(self, attr_name, attr_value)
+        self.matchs = []
         self.start_date = datetime.now()
         self.end_date = None
-        self.matchs = []
+        self.all_rounds.append(self)
 
     def serialize(self):
         serialized = {
             'id': self.id,
             'name': self.name,
+            'start_date': self.start_date,
+            'end_date': self.end_date,
             'matchs': self.get_id_rounds()
         }
         return serialized

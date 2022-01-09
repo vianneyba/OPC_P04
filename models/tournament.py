@@ -2,13 +2,16 @@ import uuid
 
 
 class Tournament:
-    """Model d'un tournoi"""
+
+    all_tournaments = []
+
     def __init__(self, tournament_dic={}):
         self.id = str(uuid.uuid1())
         self.rounds = []
         self.players = []
         for attr_name, attr_value in tournament_dic.items():
             setattr(self, attr_name, attr_value)
+        self.all_tournaments.append(self)
 
     def serialize(self):
         players_id = []

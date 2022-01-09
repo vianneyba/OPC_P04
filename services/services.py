@@ -3,6 +3,17 @@ from tinydb import TinyDB, Query
 db = TinyDB('db.json')
 
 
+class Management:
+    @classmethod
+    def get_by_id(self, my_id):
+        q = Query()
+        return self.table.search(q.id == my_id)[0]
+
+    @classmethod
+    def get_all(self):
+        return self.table.all()
+
+
 class PlayerManagement:
     table = db.table('players')
 
@@ -45,15 +56,19 @@ class TournamentManagement:
         self.table.insert(tournament)
 
 
-class RoundManagement:
+class RoundManagement(Management):
     table = db.table('rounds')
 
     @classmethod
     def save(self, round):
         self.table.insert(round)
 
+    @classmethod
+    def get_all(self):
+        return self.table.all()
 
-class MatchManagement:
+
+class MatchManagement(Management):
     table = db.table('matchs')
 
     @classmethod

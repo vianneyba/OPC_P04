@@ -9,6 +9,12 @@ class PlayerController:
     lnk = LinkTracking()
 
     @classmethod
+    def get_by_id(cls, id_player):
+        for player in Player.all_players:
+            if player.id == id_player:
+                return player
+
+    @classmethod
     def get_all_players_by_rating(self):
         return sorted(Player.all_players, key=lambda x: x.rating)
 

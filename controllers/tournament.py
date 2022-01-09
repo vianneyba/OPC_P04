@@ -85,6 +85,33 @@ class TournamentController:
         tournament.add_round(my_round)
         return tournament
 
+    @classmethod
+    def import_all_tournament(self):
+        tournaments = TournamentManagement.get_all()
+        for tournament in tournaments:
+            t = Tournament()
+            t.name = tournament['name']
+            t.place = tournament['place']
+            t.start_date = tournament['start_date']
+            t.nbr_days = tournament['nbr_days']
+            t.nbr_rounds = tournament['nbr_rounds']
+            t.ctr_time = tournament['ctr_time']
+            t.description = tournament['description']
+
+            for player_id in tournament['players']:
+                t.add_player(PlayerController.get_by_id(player_id))
+
+            for round_id in tournament['rounds']:
+                round_dic = RoundController.get_by_id(round_id)
+                my_round = Round(round_dic)
+                for match_id in round_dic['matchs']:
+                    match = MatchManagement.get_by_id(match_id)
+                    new_match = Match(match)
+                    for tuple_player in match['players']:
+                        new_match.add_player(PlayerController.get_by_id(tuple_player[0]), tuple_player[1])
+                    my_round.add_match(new_match)
+                t.add_round(my_round)
+
 
 class RoundController:
 
@@ -102,5 +129,23 @@ class RoundController:
             match.add_player(Player(player_one))
             match.add_player(Player(player_two))
             round_one.add_match(match)
-
         return round_one
+
+    @classmethod
+    def import_all_rounds(self, players_list, name):
+        return RoundManagement.get_all()
+
+    @classmethod
+    def get_by_id(cls, my_id):
+        return RoundManagement.get_by_id(my_id)
+
+
+class MatchController:
+
+    @classmethod
+    def import_all_matches(self):
+        return MatchManagement.get_all()
+
+    @classmethod
+    def get_by_id(cls, my_id):
+        return MatchManagement.get_by_id(my_id)

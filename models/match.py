@@ -2,12 +2,19 @@ import uuid
 
 
 class Match:
-    def __init__(self):
-        self.id = str(uuid.uuid1())
+
+    all_matches = []
+
+    def __init__(self, match_dic={}):
         self.player_one = None
-        self.player_one_pt = 0
         self.player_two = None
+        self.player_one_pt = 0
         self.player_two_pt = 0
+        if match_dic:
+            self.id = match_dic['id']
+        else:
+            self.id = str(uuid.uuid1())
+        self.all_matches.append(self)
 
     def serialize(self):
         serialized = {

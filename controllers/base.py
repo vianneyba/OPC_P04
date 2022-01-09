@@ -6,8 +6,6 @@ from models.linktracking import LinkTracking
 
 class Controller:
     def __init__(self, menu_view):
-        self.list_player = []
-        self.list_tournament = []
         self.view = menu_view
         self.lnk = LinkTracking()
 
@@ -27,8 +25,7 @@ class Controller:
                     break
 
             if self.lnk.page == 'new_tournament':
-                new_tournament = Tournament_C.add_tournament(self.view)
-                self.list_tournament.append(new_tournament)
+                Tournament_C.add_tournament(self.view)
                 self.lnk.page = ''
             elif self.lnk.page == 'player':
                 select = self.view.display_menu_player()
@@ -57,4 +54,5 @@ class Controller:
                 self.lnk.page = ''
             elif self.lnk.page == 'import':
                 Player_C.import_all_players()
+                Tournament_C.import_all_tournament()
                 self.lnk.page = ''
