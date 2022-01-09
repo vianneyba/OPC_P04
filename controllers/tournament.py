@@ -64,8 +64,8 @@ class TournamentController:
         self.lnk.init()
         while self.lnk.next is False:
             message = 'Côntrole du temps ([1] Bullet, [2] Blitz, [3] Coup rapide): '
-            ctr_time = view.field_text(self.lnk, message)
-            tournament.ctr_time = Vld.tournament_ctr_time(ctr_time, self.lnk)
+            ctr_time = Vld.tournament_ctr_time(view.field_text(self.lnk, message), self.lnk)
+            tournament.ctr_time = self.get_ctr_time(self, ctr_time)
 
         self.lnk.init()
         while self.lnk.next is False:
@@ -120,6 +120,24 @@ class TournamentController:
             view.display_list_tournament(tournament, index+1)
         return view.choice_tournament()
 
+    def get_ctr_time(self, ctr_time):
+        if ctr_time == '1':
+            return 'bullet'
+        elif ctr_time == '2':
+            return 'blitz'
+        elif ctr_time == '3':
+            return 'coup rapide'
+        elif ctr_time.lower() in ['bullet', 'blitz', 'coup rapide']:
+            return ctr_time.lower()
+
+    def form(self, view, message, validation):
+        self.lnk.init()
+        while self.lnk.next is False:
+            response = view.field_text(self.lnk, message)
+            validation(response, self.lnk)
+            if self.lnk.next is True:
+                return response
+
     @classmethod
     def menu_edit_tournament(self, view, tournament):
         select = '0'
@@ -127,30 +145,17 @@ class TournamentController:
         while select != 'q':
             select = view.display_edit_tournament_menu()
             if select == '2':
-                self.lnk.init()
-                while self.lnk.next is False:
-                    message = f'Entrer le nouveau nom du tournoi [{tournament.name}]: '
-                    name = view.field_text(self.lnk, message)
-                    Vld.tournament_name(name, self.lnk)
-                    if self.lnk.next is True:
-                        tournament.name = name
+                message = f'Entrer le nouveau nom du tournoi [{tournament.name}]: '
+                tournament.name = self.form(self, view, message, Vld.tournament_name)
             if select == '3':
                 self.lnk.init()
                 while self.lnk.next is False:
                     message = 'Entrer la nouvelle description: '
-                    description = view.field_text(self.lnk, message)
-                    Vld.tournament_description(description, self.lnk)
-                    if self.lnk.next is True:
-                        tournament.description = description
+                    tournament.description = self.form(self, view, message, Vld.tournament_ctr_time)
             if select == '4':
-                self.lnk.init()
-                while self.lnk.next is False:
-                    message = 'Côntrole du temps ([1] Bullet, [2] Blitz, [3] Coup rapide): '
-                    response = view.field_text(self.lnk, message)
-                    ctr_time = Vld.tournament_ctr_time(response, self.lnk)
-                    if self.lnk.next is True:
-                        tournament.ctr_time = ctr_time
-
+                message = 'Côntrole du temps ([1] Bullet, [2] Blitz, [3] Coup rapide): '
+                ctr_time = self.form(self, view, message, Vld.tournament_ctr_time)
+                tournament.ctr_time = self.get_ctr_time(self, ctr_time)
         self.lnk.init()
 
 
@@ -158,7 +163,7 @@ class RoundController:
 
     @classmethod
     def create_round(self, players_list, name):
-        round_one = Round(name)
+        round_one = Round({'name': name})
         players_list = sorted(players_list, key=lambda x: x['rating'])
         half = len(players_list)//2
         list_one = players_list[:half]

@@ -109,16 +109,7 @@ class Validation:
     @classmethod
     def tournament_ctr_time(self, ctr_time, error):
         error.message = 'le côntrole du temps n\'est pas conforme'
-        if ctr_time == '1':
-            error.next = True
-            return 'bullet'
-        elif ctr_time == '2':
-            error.next = True
-            return 'blitz'
-        elif ctr_time == '3':
-            error.next = True
-            return 'coup rapide'
-        elif ctr_time.lower() in ['bullet', 'blitz', 'coup rapide']:
+        if ctr_time.lower() in ['1', '2', '3', 'bullet', 'blitz', 'coup rapide']:
             error.next = True
             return ctr_time.lower()
         else:
