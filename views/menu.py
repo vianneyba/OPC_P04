@@ -40,6 +40,19 @@ class MenuView:
             print(f'!!!!!==> {linktracking.message} !!!!!<==')
         return input(message)
 
+        def display_list_tournaments(self, players):
+            print('{0:-^43}'.format(''))
+            print('{0:-^43}'.format(' Liste des tournoi '))
+            print('{0:-^43}'.format(''))
+            print('{:^12} | {:^12} | {:^5} | {:^5}'.format("prénom", "nom", "genre", "place"))
+            for player in players:
+                new_player = {
+                    'firstname': player.firstname,
+                    'lastname': player.lastname,
+                    'gender': player.gender,
+                    'rating': player.rating}
+                print('{:^12} | {:^12} | {:^5} | {:^5}'.format(new_player["firstname"], new_player["lastname"], new_player["gender"], new_player["rating"]))
+
     # ----- *** MENU PLAYER *** -----
     def display_player_new(self, nbr=1):
         self.format_title(' ajout nouveau joueur {} '.format(nbr))
@@ -63,11 +76,41 @@ class MenuView:
         print(f'Sexe: {player.gender}')
         print(f'classement: {player.rating}')
 
+    def display_list_tournament(self, tournament, index):
+        print('{0:-^43}'.format(''))
+        print(f'index du tournoi: {index}')
+        print(f'Nom: {tournament.name}')
+        print(f'Lieu: {tournament.place}')
+        print(f'Date du début: {tournament.start_date}')
+        print(f'Date de fin: {tournament.start_date}')
+        print(f'Côntrole du temps: {tournament.ctr_time}')
+        print(f'Description: {tournament.description}')
+        print(f'Nombre de tour: {len(tournament.rounds)}/{tournament.nbr_rounds}')
+
+    def choice_tournament(self):
+        return input('Taper l\'index du tournoi a modifier:')
+
+    def display_edit_tournament_menu(self):
+        self.headings('Edition d\'un tournoi')
+        menu = [
+            ('1', 'Fin de round (mise à jour des scores): '),
+            ('2', 'change le nom'),
+            ('3', 'changer la description'),
+            ('4', 'changer le controlle du temps'),
+            ('5', 'changer la localisation'),
+            ('6', 'changer la date du début de tournoi'),
+            ('7', 'changer la durée du tournoi')
+        ]
+        return self.display(menu)
+
 # ----- *** MENU TOURNOI *** -----
     def display_tournament_new(self):
         self.format_title(' ajout nouveau tournoi ')
 
     def display_menu_tournament(self):
         self.headings('menu tournoi')
-        menu = ['Créer un tournoi', 'Liste des tournois']
+        menu = [
+            ('1', 'Créer un tournoi'),
+            ('2', 'Liste des tournois')
+        ]
         return self.display(menu)

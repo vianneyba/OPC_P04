@@ -36,10 +36,15 @@ class PlayerManagement:
 
     @classmethod
     def save(self, user):
-        self.table.insert(user)
+        try:
+            self.get_by_id(user['id'])
+            Player = Query()
+            self.table.update(user, Player.id == user['id'])
+        except IndexError:
+            self.table.insert(user)
 
 
-class TournamentManagement:
+class TournamentManagement(Management):
     table = db.table('tournaments')
 
     @classmethod
@@ -53,15 +58,25 @@ class TournamentManagement:
 
     @classmethod
     def save(self, tournament):
-        self.table.insert(tournament)
+        try:
+            self.get_by_id(tournament['id'])
+            Tournament = Query()
+            self.table.update(tournament, Tournament.id == tournament['id'])
+        except IndexError:
+            self.table.insert(tournament)
 
 
 class RoundManagement(Management):
     table = db.table('rounds')
 
     @classmethod
-    def save(self, round):
-        self.table.insert(round)
+    def save(self, my_round):
+        try:
+            self.get_by_id(my_round['id'])
+            Round = Query()
+            self.table.update(my_round, Round.id == my_round['id'])
+        except IndexError:
+            self.table.insert(my_round)
 
     @classmethod
     def get_all(self):
@@ -73,4 +88,9 @@ class MatchManagement(Management):
 
     @classmethod
     def save(self, match):
-        self.table.insert(match)
+        try:
+            self.get_by_id(match['id'])
+            Match = Query()
+            self.table.update(match, Match.id == match['id'])
+        except IndexError:
+            self.table.insert(match)

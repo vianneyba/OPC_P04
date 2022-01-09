@@ -33,43 +33,43 @@ class TournamentController:
 
         self.lnk.init()
         while self.lnk.next is False:
-            message = 'entrer le nom du tournoi: '
+            message = 'Entrer le nom du tournoi: '
             tournament.name = view.field_text(self.lnk, message)
             Vld.tournament_name(tournament.name, self.lnk)
 
         self.lnk.init()
         while self.lnk.next is False:
-            message = 'entrer le lieu du tournoi: '
+            message = 'Entrer le lieu du tournoi: '
             tournament.place = view.field_text(self.lnk, message)
             Vld.tournament_place(tournament.place, self.lnk)
 
         self.lnk.init()
         while self.lnk.next is False:
-            message = 'entrer la date du début du tournoi (jj/mm/yyyy): '
+            message = 'Entrer la date du début du tournoi (jj/mm/yyyy): '
             new_date = view.field_text(self.lnk, message)
             tournament.start_date = Vld.tournament_date_start(new_date, self.lnk)
 
         self.lnk.init()
         while self.lnk.next is False:
-            message = 'combien de jour durera la tournoi [1]: '
+            message = 'Combien de jour durera la tournoi [1]: '
             nbr_days = view.field_text(self.lnk, message)
             tournament.nbr_days = Vld.tournament_duration(nbr_days, self.lnk)
 
         self.lnk.init()
         while self.lnk.next is False:
-            message = 'combien de tours [4]: '
+            message = 'Nombre de tours [4]: '
             nbr_rounds = view.field_text(self.lnk, message)
             tournament.nbr_rounds = Vld.tournament_rounds(nbr_rounds, self.lnk)
 
         self.lnk.init()
         while self.lnk.next is False:
-            message = 'côntrole du temps ([1] Bullet, [2] Blitz, [3] Coup rapide): '
+            message = 'Côntrole du temps ([1] Bullet, [2] Blitz, [3] Coup rapide): '
             ctr_time = view.field_text(self.lnk, message)
             tournament.ctr_time = Vld.tournament_ctr_time(ctr_time, self.lnk)
 
         self.lnk.init()
         while self.lnk.next is False:
-            message = 'entrer une description: '
+            message = 'Entrer une description: '
             tournament.description = view.field_text(self.lnk, message)
             Vld.tournament_description(tournament.description, self.lnk)
 
@@ -87,9 +87,11 @@ class TournamentController:
 
     @classmethod
     def import_all_tournament(self):
+        Tournament.all_tournaments = []
         tournaments = TournamentManagement.get_all()
         for tournament in tournaments:
             t = Tournament()
+            t.id = tournament['id']
             t.name = tournament['name']
             t.place = tournament['place']
             t.start_date = tournament['start_date']
@@ -111,6 +113,35 @@ class TournamentController:
                         new_match.add_player(PlayerController.get_by_id(tuple_player[0]), tuple_player[1])
                     my_round.add_match(new_match)
                 t.add_round(my_round)
+
+    @classmethod
+    def view_tournaments(self, view):
+        for index, tournament in enumerate(Tournament.all_tournaments):
+            view.display_list_tournament(tournament, index+1)
+        return view.choice_tournament()
+
+    @classmethod
+    def menu_edit_tournament(self, view, tournament):
+        select = '0'
+
+        while select != 'q':
+            select = view.display_edit_tournament_menu()
+            if select == '2':
+                self.lnk.init()
+                while self.lnk.next is False:
+                    message = f'Entrer le nouveau nom du tournoi [{tournament.name}]: '
+                    name = view.field_text(self.lnk, message)
+                    Vld.tournament_name(name, self.lnk)
+                    if self.lnk.next is True:
+                        tournament.name = name
+            if select == '3':
+                self.lnk.init()
+                while self.lnk.next is False:
+                    message = 'Entrer la nouvelle description: '
+                    description = view.field_text(self.lnk, message)
+                    Vld.tournament_description(description, self.lnk)
+                    if self.lnk.next is True:
+                        tournament.description = description
 
 
 class RoundController:

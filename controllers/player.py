@@ -24,6 +24,7 @@ class PlayerController:
 
     @classmethod
     def import_all_players(self):
+        Player.all_players = []
         players = Player_M.get_all()
         for player in players:
             Player(player)
