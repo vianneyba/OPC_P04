@@ -142,6 +142,16 @@ class TournamentController:
                     Vld.tournament_description(description, self.lnk)
                     if self.lnk.next is True:
                         tournament.description = description
+            if select == '4':
+                self.lnk.init()
+                while self.lnk.next is False:
+                    message = 'Côntrole du temps ([1] Bullet, [2] Blitz, [3] Coup rapide): '
+                    response = view.field_text(self.lnk, message)
+                    ctr_time = Vld.tournament_ctr_time(response, self.lnk)
+                    if self.lnk.next is True:
+                        tournament.ctr_time = ctr_time
+
+        self.lnk.init()
 
 
 class RoundController:
