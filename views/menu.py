@@ -24,7 +24,8 @@ class MenuView:
             ('2', 'Joueur'),
             ('3', 'Tournoi'),
             ('8', 'Chargement'),
-            ('9', 'Sauvegarde')]
+            ('9', 'Sauvegarde')
+        ]
         return self.display(menu)
 
     def display_menu_player(self):
@@ -32,7 +33,19 @@ class MenuView:
         menu = [
             ('1', 'Ajouter un joueur'),
             ('2', 'Liste des joueurs par nom'),
-            ('3', 'liste des joueurs par classement')]
+            ('3', 'liste des joueurs par classement'),
+            ('4', 'modifier joueur')
+        ]
+        return self.display(menu)
+
+    def display_edit_player(self):
+        self.headings('Edition Joueur')
+        menu = [
+            ('1', 'modifer le prénom'),
+            ('2', 'modifer le nom'),
+            ('3', 'modfier la date de naissance'),
+            ('4', 'modifer le classement')
+        ]
         return self.display(menu)
 
     def field_text(self, linktracking, message):
@@ -60,27 +73,33 @@ class MenuView:
     def display_player_new(self, nbr=1):
         self.format_title(' ajout nouveau joueur {} '.format(nbr))
 
-    def display_list_players(self, players):
+    def display_list_players(self, players, with_numbering=False):
+        champ = ['prénom', 'nom', 'genre', 'place', 'points']
+        formatage = '{:^12} | {:^12} | {:^5} | {:^5} | {:^5}'
+        if with_numbering:
+            champ.insert(0, 'numéro')
         print('{0:-^43}'.format(''))
         print('{0:-^43}'.format(' Liste des Joueurs '))
         print('{0:-^43}'.format(''))
-        print('{:^12} | {:^12} | {:^5} | {:^5} | {:^5}'.format(
-            "prénom", "nom",
-            "genre", "place",
-            "points"
-        ))
-        for player in players:
-            print('{:^12} | {:^12} | {:^5} | {:^5} | {:^5}'.format(
+        print(formatage.format(*champ))
+        for index, player in enumerate(players):
+            player_feature = [
                 player.firstname, player.lastname,
                 player.gender, player.rating,
                 player.points
-            ))
+            ]
+            if with_numbering:
+                player_feature.insert(0, index+1)
+            print(formatage.format(*player_feature))
 
     def display_player(self, player):
         print(f'Prénom: {player.firstname}')
         print(f'Nom: {player.lastname}')
         print(f'Sexe: {player.gender}')
         print(f'classement: {player.rating}')
+
+    def select_player(self):
+        return input('Quel joueur modifier?: ')
 
     def display_list_tournament(self, tournament, index):
         print('{0:-^43}'.format(''))

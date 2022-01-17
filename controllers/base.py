@@ -38,6 +38,8 @@ class Controller:
                     self.lnk.sub_page = 'list_player_by_last_name'
                 elif select == '3':
                     self.lnk.sub_page = 'list_player_by_rating'
+                elif select == '4':
+                    self.lnk.sub_page = 'edit_player'
                 elif select.lower() == 'q':
                     self.lnk.page = ''
                     self.lnk.sub_page = ''
@@ -51,6 +53,31 @@ class Controller:
                 elif self.lnk.sub_page == 'list_player_by_rating':
                     players = Player_C.get_all_players_by_rating()
                     self.view.display_list_players(players)
+                elif self.lnk.sub_page == 'edit_player':
+                    players = Player_C.get_all_players_by_name()
+                    self.view.display_list_players(players, True)
+                    number = int(self.view.select_player()) - 1
+                    p_select = players[number]
+
+                    player_c = Player_C(self.view)
+                    while True:
+                        select = self.view.display_edit_player()
+                        if select == '1':
+                            p_select.firstname = player_c.field_firstname(
+                                p_select.firstname
+                            )
+                        elif select == '2':
+                            p_select.lastname = player_c.field_lastname(
+                                p_select.lastname
+                            )
+                        elif select == '4':
+                            p_select.rating = player_c.field_rating(
+                                p_select.rating
+                            )
+                        elif select == 'q':
+                            self.lnk.sub_page = ''
+                            break
+
             elif self.lnk.page == 'tournament':
                 select = self.view.display_menu_tournament()
                 if select == '1':
@@ -65,12 +92,14 @@ class Controller:
                     Tournament_C.add_tournament(self.view)
                     self.lnk.page = ''
                 elif self.lnk.sub_page == 'tournament_list':
-                    tournament_id = Tournament_C.view_tournaments(self.view)
-                    if tournament_id == 'q':
+                    t_id = Tournament_C.view_tournaments(self.view)
+                    if t_id == 'q':
                         self.lnk.sub_page = ''
                     else:
-                        tournament_id = int(tournament_id) - 1
-                        Tournament_C.menu_edit_tournament(self.view, Tournament.all_tournaments[tournament_id])
+                        t_id = int(t_id) - 1
+                        Tournament_C.menu_edit_tournament(
+                            self.view, Tournament.all_tournaments[t_id]
+                        )
                     self.lnk.sub_page = ''
 
             elif self.lnk.page == 'export':

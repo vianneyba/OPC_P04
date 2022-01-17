@@ -7,6 +7,10 @@ from services.services import PlayerManagement as Player_M
 class PlayerController:
 
     lnk = LinkTracking()
+    view = None
+
+    def __init__(self, view):
+        self.view = view
 
     @classmethod
     def get_by_id(cls, id_player):
@@ -40,21 +44,13 @@ class PlayerController:
 
     @classmethod
     def add_player(self, view, nbr=1):
+        self.view = view
         player = {}
 
         view.display_player_new(nbr)
 
-        self.lnk.init()
-        while self.lnk.next is False:
-            message = 'entrer son prénom: '
-            player['firstname'] = view.field_text(self.lnk, message)
-            Validation.first_name(player['firstname'], self.lnk)
-
-        self.lnk.init()
-        while self.lnk.next is False:
-            message = 'entrer son nom: '
-            player['lastname'] = view.field_text(self.lnk, message)
-            Validation.last_name(player['lastname'], self.lnk)
+        player['firstname'] = self.field_firstname(self)
+        player['lastname'] = self.field_lastname(self)
 
         self.lnk.init()
         while self.lnk.next is False:
@@ -63,7 +59,6 @@ class PlayerController:
             Validation.tournament_date_start(player['birthday'], self.lnk)
 
         player_searched = self.get_player_by_name_and_birthday(player)
-        print(f'player_searched = {player_searched}')
         if player_searched is not None:
             return player_searched
 
@@ -73,10 +68,39 @@ class PlayerController:
             player['gender'] = view.field_text(self.lnk, message)
             Validation.gender(player['gender'], self.lnk)
 
-        self.lnk.init()
-        while self.lnk.next is False:
-            message = 'entrer son classement: '
-            rating = view.field_text(self.lnk, message)
-            player['rating'] = Validation.rating(rating, self.lnk)
+        player['rating'] = self.field_rating(self)
 
         return Player(player)
+
+    def field_firstname(self, txt=None):
+        self.lnk.init()
+        while self.lnk.next is False:
+            if txt:
+                message = f'nouveau prénom ({txt}): '
+            else:
+                message = 'entrer son prénom: '
+            firstname = self.view.field_text(self.lnk, message)
+            Validation.first_name(firstname, self.lnk)
+        return firstname
+
+    def field_lastname(self, txt=None):
+        self.lnk.init()
+        while self.lnk.next is False:
+            if txt:
+                message = f'nouveau nom ({txt}): '
+            else:
+                message = 'entrer son nom: '
+            lastname = self.view.field_text(self.lnk, message)
+            Validation.last_name(lastname, self.lnk)
+        return lastname
+
+    def field_rating(self, txt=None):
+        self.lnk.init()
+        while self.lnk.next is False:
+            if txt:
+                message = f'nouveau classement ({txt}): '
+            else:
+                message = 'entrer son classement: '
+            rating = self.view.field_text(self.lnk, message)
+            rating = Validation.rating(rating, self.lnk)
+        return rating
