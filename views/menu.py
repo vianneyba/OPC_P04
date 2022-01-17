@@ -97,7 +97,7 @@ class MenuView:
     def choice_tournament(self):
         return input('Taper l\'index du tournoi a modifier:')
 
-    def display_edit_tournament_menu(self):
+    def display_edit_tournament_menu(self, is_close=False):
         self.headings('Edition d\'un tournoi')
         menu = [
             ('1', 'Fin de round (mise à jour des scores): '),
@@ -108,6 +108,8 @@ class MenuView:
             ('6', 'changer la date du début de tournoi'),
             ('7', 'changer la durée du tournoi')
         ]
+        if is_close:
+            menu.pop(0)
         return self.display(menu)
 
     # ----- *** MENU TOURNOI *** -----

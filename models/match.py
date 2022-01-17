@@ -49,7 +49,7 @@ class Match:
         return (
             f'{self.player_one.firstname} ({self.player_one.rating} '
             f'avec {self.player_one_pt})'
-            f'VS'
+            f' VS '
             f'{self.player_two.firstname} ({self.player_two.rating} '
             f'avec {self.player_two_pt})'
         )

@@ -140,10 +140,10 @@ class TournamentController:
         select = '0'
 
         while select != 'q':
-            select = view.display_edit_tournament_menu()
+            select = view.display_edit_tournament_menu(tournament.is_finish())
             if select == '1':
-                last_round = RoundController.get_last_round(tournament)
-                if last_round is not None:
+                if not tournament.is_finish():
+                    last_round = tournament.get_last_round()
                     matches = last_round.matches
 
                     for match in matches:
@@ -156,8 +156,6 @@ class TournamentController:
                             select_one = view.finish_match(p_one, p_two)
                             if select_one in ['1', '2', '3']:
                                 MatchController.add_point(int(select_one), match)
-                                continu = False
-                            elif select_one != 'q':
                                 continu = False
 
                     last_round.finish()
@@ -227,12 +225,6 @@ class RoundController:
     def get_by_id(cls, my_id):
         return RoundManagement.get_by_id(my_id)
 
-    @classmethod
-    def get_last_round(clas, tournament):
-        for my_round in tournament.rounds:
-            if my_round.end_date is None:
-                return my_round
-
 
 class MatchController:
 
@@ -246,11 +238,15 @@ class MatchController:
 
     @classmethod
     def add_point(cls, player_selected: int, match: Match):
-        match.add_point(player_selected, 1)
         if player_selected == 1:
             match.player_one.add_points(1)
+            pts = 1
         elif player_selected == 2:
             match.player_two.add_points(1)
+            pts = 1
         elif player_selected == 3:
             match.player_one.add_points(0.5)
             match.player_two.add_points(0.5)
+            pts = 0.5
+
+        match.add_point(player_selected, pts)

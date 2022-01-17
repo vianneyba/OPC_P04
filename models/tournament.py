@@ -64,5 +64,16 @@ class Tournament:
     def get_players(self):
         return self.players
 
+    def get_last_round(self):
+        for round in self.rounds:
+            if round.end_date is None:
+                return round
+
+    def is_finish(self):
+        for round in self.rounds:
+            if round.end_date is None:
+                return False
+        return True
+
     def add_round(self, round):
         self.rounds.append(round)
