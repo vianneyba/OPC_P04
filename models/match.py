@@ -23,6 +23,15 @@ class Match:
         }
         return serialized
 
+    def add_point(self, player_selected: int, pts: float):
+        if player_selected == 1:
+            self.player_one_pt += pts
+        elif player_selected == 2:
+            self.player_two_pt += pts
+        elif player_selected == 3:
+            self.player_one_pt += pts
+            self.player_two_pt += pts
+
     def get_tuple_players(self):
         p_one = [self.player_one.id, self.player_one_pt]
         p_two = [self.player_two.id, self.player_two_pt]
@@ -37,4 +46,10 @@ class Match:
             self.player_two_pt = point
 
     def __str__(self):
-        return f'{self.player_one.firstname} ({self.player_one.rating}) VS {self.player_two.firstname} ({self.player_two.rating})'
+        return (
+            f'{self.player_one.firstname} ({self.player_one.rating} '
+            f'avec {self.player_one_pt})'
+            f'VS'
+            f'{self.player_two.firstname} ({self.player_two.rating} '
+            f'avec {self.player_two_pt})'
+        )

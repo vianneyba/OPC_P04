@@ -84,7 +84,7 @@ class RoundManagement(Management):
 
 
 class MatchManagement(Management):
-    table = db.table('matchs')
+    table = db.table('matches')
 
     @classmethod
     def save(self, match):

@@ -38,6 +38,10 @@ class Tournament:
             players_id.append(player.id)
         return players_id
 
+    def get_players_by_points(self):
+        players = sorted(self.players, key=lambda x: x.points)
+        return players
+
     def get_rounds_id(self):
         rounds_id = []
         for round_t in self.rounds:
@@ -57,11 +61,8 @@ class Tournament:
     def add_player(self, new_player):
         self.players.append(new_player)
 
-    def export_players(self):
-        players = []
-        for player in self.players:
-            players.append(player.serialize())
-        return players
+    def get_players(self):
+        return self.players
 
     def add_round(self, round):
         self.rounds.append(round)

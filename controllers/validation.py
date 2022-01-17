@@ -10,6 +10,7 @@ class Validation:
             error.error = True
         else:
             error.next = True
+            return firstname
 
     @classmethod
     def last_name(self, lastname, error):
@@ -18,6 +19,7 @@ class Validation:
             error.error = True
         else:
             error.next = True
+            return lastname
 
     @classmethod
     def gender(self, gender, error):
@@ -26,6 +28,7 @@ class Validation:
             error.error = True
         else:
             error.next = True
+            return gender
 
     @classmethod
     def rating(self, rating, error):
@@ -49,6 +52,7 @@ class Validation:
             error.error = True
         else:
             error.next = True
+            return name
 
     @classmethod
     def tournament_place(self, place, error):
@@ -57,6 +61,7 @@ class Validation:
             error.error = True
         else:
             error.next = True
+            return place
 
     @classmethod
     def tournament_date_start(self, date_start, error):
@@ -109,7 +114,8 @@ class Validation:
     @classmethod
     def tournament_ctr_time(self, ctr_time, error):
         error.message = 'le côntrole du temps n\'est pas conforme'
-        if ctr_time.lower() in ['1', '2', '3', 'bullet', 'blitz', 'coup rapide']:
+        ctr = ['1', '2', '3', 'bullet', 'blitz', 'coup rapide']
+        if ctr_time.lower() in ctr:
             error.next = True
             return ctr_time.lower()
         else:
@@ -118,3 +124,4 @@ class Validation:
     @classmethod
     def tournament_description(self, description, error):
         error.next = True
+        return description

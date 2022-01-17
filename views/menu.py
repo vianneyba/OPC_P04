@@ -40,18 +40,21 @@ class MenuView:
             print(f'!!!!!==> {linktracking.message} !!!!!<==')
         return input(message)
 
-        def display_list_tournaments(self, players):
-            print('{0:-^43}'.format(''))
-            print('{0:-^43}'.format(' Liste des tournoi '))
-            print('{0:-^43}'.format(''))
-            print('{:^12} | {:^12} | {:^5} | {:^5}'.format("prénom", "nom", "genre", "place"))
-            for player in players:
-                new_player = {
-                    'firstname': player.firstname,
-                    'lastname': player.lastname,
-                    'gender': player.gender,
-                    'rating': player.rating}
-                print('{:^12} | {:^12} | {:^5} | {:^5}'.format(new_player["firstname"], new_player["lastname"], new_player["gender"], new_player["rating"]))
+    def display_list_tournaments(self, players):
+        print('{0:-^43}'.format(''))
+        print('{0:-^43}'.format(' Liste des Jouer du tournoi '))
+        print('{0:-^43}'.format(''))
+        print('{:^12} | {:^12} | {:^5} | {:^5} | {:^5}'.format(
+            "prénom", "nom",
+            "genre", "place",
+            "points"
+        ))
+        for player in players:
+            print('{:^12} | {:^12} | {:^5} | {:^5} | {:^5}'.format(
+                player.firstname, player.lastname,
+                player.gender, player.rating,
+                player.points
+            ))
 
     # ----- *** MENU PLAYER *** -----
     def display_player_new(self, nbr=1):
@@ -61,14 +64,17 @@ class MenuView:
         print('{0:-^43}'.format(''))
         print('{0:-^43}'.format(' Liste des Joueurs '))
         print('{0:-^43}'.format(''))
-        print('{:^12} | {:^12} | {:^5} | {:^5}'.format("prénom", "nom", "genre", "place"))
+        print('{:^12} | {:^12} | {:^5} | {:^5} | {:^5}'.format(
+            "prénom", "nom",
+            "genre", "place",
+            "points"
+        ))
         for player in players:
-            new_player = {
-                'firstname': player.firstname,
-                'lastname': player.lastname,
-                'gender': player.gender,
-                'rating': player.rating}
-            print('{:^12} | {:^12} | {:^5} | {:^5}'.format(new_player["firstname"], new_player["lastname"], new_player["gender"], new_player["rating"]))
+            print('{:^12} | {:^12} | {:^5} | {:^5} | {:^5}'.format(
+                player.firstname, player.lastname,
+                player.gender, player.rating,
+                player.points
+            ))
 
     def display_player(self, player):
         print(f'Prénom: {player.firstname}')
@@ -85,7 +91,8 @@ class MenuView:
         print(f'Date de fin: {tournament.start_date}')
         print(f'Côntrole du temps: {tournament.ctr_time}')
         print(f'Description: {tournament.description}')
-        print(f'Nombre de tour: {len(tournament.rounds)}/{tournament.nbr_rounds}')
+        nbr_rounds = f'{len(tournament.rounds)}/{tournament.nbr_rounds}'
+        print(f'Nombre de tour: {nbr_rounds}')
 
     def choice_tournament(self):
         return input('Taper l\'index du tournoi a modifier:')
@@ -103,7 +110,7 @@ class MenuView:
         ]
         return self.display(menu)
 
-# ----- *** MENU TOURNOI *** -----
+    # ----- *** MENU TOURNOI *** -----
     def display_tournament_new(self):
         self.format_title(' ajout nouveau tournoi ')
 
@@ -114,3 +121,9 @@ class MenuView:
             ('2', 'Liste des tournois')
         ]
         return self.display(menu)
+
+    def finish_match(self, p_one, p_two):
+        print(f'[1] si le Joueur {p_one.firstname} {p_one.lastname} a gagné')
+        print(f'[2] si le Joueur {p_two.firstname} {p_two.lastname} a gagné')
+        print('[3] pour une égalité')
+        return input('votre choix: ')
