@@ -11,6 +11,22 @@ class Controller:
         self.lnk = LinkTracking()
         self.tc = TournamentController(self.view)
 
+    def rapport_menu(self):
+        select = self.view.display_menu_rapport()
+
+        if select == '1':
+            self.lnk.sub_page = self.view.display_menu_order()
+            if self.lnk.sub_page == '1':
+                players = Player_C.get_all_players_by_name()
+                self.view.display_list_players(players)
+            elif self.lnk.sub_page == '2':
+                players = Player_C.get_all_players_by_rating()
+                self.view.display_list_players(players)
+            elif self.lnk.sub_page == 'q':
+                self.lnk.page = ''
+        elif select == 'q':
+            self.lnk.page = ''
+
     def run(self):
         while True:
             if self.lnk.page == '':
@@ -21,6 +37,8 @@ class Controller:
                     self.lnk.page = 'player'
                 elif select == '3':
                     self.lnk.page = 'tournament'
+                elif select == '4':
+                    self.lnk.page = 'rapport'
                 elif select == '8':
                     self.lnk.page = 'import'
                 elif select == '9':
@@ -102,7 +120,8 @@ class Controller:
                             self.view, Tournament.all_tournaments[t_id]
                         )
                     self.lnk.sub_page = ''
-
+            elif self.lnk.page == 'rapport':
+                self.rapport_menu()
             elif self.lnk.page == 'export':
                 for tournament in Tournament.all_tournaments:
                     self.tc.save(tournament)

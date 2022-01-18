@@ -32,6 +32,7 @@ class MenuView:
             ('1', 'Créer un tournoi'),
             ('2', 'Joueur'),
             ('3', 'Tournoi'),
+            ('4', 'Rapports'),
             ('8', 'Chargement'),
             ('9', 'Sauvegarde')
         ]
@@ -160,3 +161,22 @@ class MenuView:
 
     def display_add_player(self):
         return input('Ajouter un joueur [y/n]: ')
+
+    def display_menu_rapport(self):
+        self.headings('Rapports')
+        menu = [
+            ('1', 'Liste des Joueurs'),
+            ('2', 'Liste des joueurs d\'un tournoi'),
+            ('3', 'liste des tournois'),
+            ('4', 'liste des tours d\'un tournoi'),
+            ('8', 'liste des matchs d\'un tournoi')
+        ]
+        return self.display(menu)
+
+    def display_menu_order(self):
+        self.headings('Rapports')
+        menu = [
+            ('1', 'Ordre de classement'),
+            ('2', 'Ordre alphabétique')
+        ]
+        return self.display(menu)
