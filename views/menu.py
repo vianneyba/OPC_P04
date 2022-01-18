@@ -1,17 +1,23 @@
 from config import DEFAULT_NBR_PLAYER
+from math import floor
 
 
 class MenuView:
 
+    def __init__(self):
+        self.longeur = 90
+
     def headings(self, texte):
+        texte = f' {texte} '
         print()
-        print(f'------ {texte} ------')
+        print(f'{texte:-^{self.longeur}}')
         print()
 
     def format_title(self, texte):
-        print(f'{"":-^44}')
-        print(f'{texte:-^44}')
-        print(f'{"":-^44}')
+        texte = f' {texte} '
+        print(f'{"":-^{self.longeur}}')
+        print(f'{texte:-^{self.longeur}}')
+        print(f'{"":-^{self.longeur}}')
 
     def display(self, list_menu):
         for item in list_menu:
@@ -56,57 +62,39 @@ class MenuView:
             print(f'!!!!!==> {linktracking.message} !!!!!<==')
         return input(message)
 
-    def display_list_tournaments(self, players):
-        print('{0:-^43}'.format(''))
-        print('{0:-^43}'.format(' Liste des Jouer du tournoi '))
-        print('{0:-^43}'.format(''))
-        print('{:^12} | {:^12} | {:^5} | {:^5} | {:^5}'.format(
-            "prénom", "nom",
-            "genre", "place",
-            "points"
-        ))
-        for player in players:
-            print('{:^12} | {:^12} | {:^5} | {:^5} | {:^5}'.format(
-                player.firstname, player.lastname,
-                player.gender, player.rating,
-                player.points
-            ))
-
-    # ----- *** MENU PLAYER *** -----
     def display_player_new(self, nbr=1):
-        self.format_title(' ajout nouveau joueur {} '.format(nbr))
+        self.format_title('ajout nouveau joueur {}'.format(nbr))
 
-    def display_list_players(self, players, with_numbering=False):
-        champ = ['prénom', 'nom', 'genre', 'place', 'points']
-        formatage = '{:^12} | {:^12} | {:^5} | {:^5} | {:^5}'
-        if with_numbering:
-            champ.insert(0, 'numéro')
-        print('{0:-^43}'.format(''))
-        print('{0:-^43}'.format(' Liste des Joueurs '))
-        print('{0:-^43}'.format(''))
-        print(formatage.format(*champ))
-        for index, player in enumerate(players):
-            player_feature = [
-                player.firstname, player.lastname,
-                player.gender, player.rating,
-                player.points
-            ]
-            if with_numbering:
-                player_feature.insert(0, index+1)
-            print(formatage.format(*player_feature))
-
-    def display_player(self, player):
-        print(f'Prénom: {player.firstname}')
-        print(f'Nom: {player.lastname}')
-        print(f'Sexe: {player.gender}')
-        print(f'classement: {player.rating}')
+    def display_list_players(self, players):
+        print(f'{"":-^{self.longeur}}')
+        print(f'{" Liste des Joueurs ":-^{self.longeur}}')
+        print(f'{"":-^{self.longeur}}')
+        div = 6
+        print(
+            f'{"index":^{floor(self.longeur/div)}}'
+            f'{"prénom":^{floor(self.longeur/div)}}'
+            f'{"nom":^{floor(self.longeur/div)}}'
+            f'{"genre":^{floor(self.longeur/div)}}'
+            f'{"place":^{floor(self.longeur/div)}}'
+            f'{"points":^{floor(self.longeur/div)}}'
+        )
+        for i, player in enumerate(players):
+            print(
+                f'{i+1:^{floor(self.longeur/div)}}'
+                f'{player.firstname:^{floor(self.longeur/div)}}'
+                f'{player.lastname:^{floor(self.longeur/div)}}'
+                f'{player.gender:^{floor(self.longeur/div)}}'
+                f'{player.rating:^{floor(self.longeur/div)}}'
+                f'{player.points:^{floor(self.longeur/div)}}'
+            )
+        print()
 
     def select_player(self):
         return input('Quel joueur modifier?: ')
 
     def display_list_tournament(self, tournament, index):
-        print('{0:-^43}'.format(''))
-        print(f'index du tournoi: {index}')
+        print(f'{"":-^{self.longeur}}')
+        print(f'  [{index}] index du tournoi')
         print(f'Nom: {tournament.name}')
         print(f'Lieu: {tournament.place}')
         print(f'Date du début: {tournament.start_date}')
@@ -121,7 +109,8 @@ class MenuView:
     def choice_tournament(self):
         return input('Taper l\'index du tournoi a modifier:')
 
-    def display_edit_tournament_menu(self, is_close=False, end_player=True, nb_round=0):
+    def display_edit_tournament_menu(
+                self, is_close=False, end_player=True, nb_round=0):
         self.headings('Edition d\'un tournoi')
         menu = [
             ('1', 'Fin de round (mise à jour des scores): '),
@@ -132,7 +121,8 @@ class MenuView:
             ('6', 'changer la date du début de tournoi'),
             ('7', 'changer la durée du tournoi'),
             ('8', 'Ajouter des joueurs'),
-            ('9', 'Creer le round')
+            ('9', 'Creer le round'),
+            ('10', 'Modifier le classement'),
         ]
         delete = []
         for i, el in enumerate(menu):
@@ -142,6 +132,8 @@ class MenuView:
                 delete.append(i)
             if (end_player is False or nb_round > 0) and el[0] == '9':
                 delete.append(i)
+            if is_close is False and el[0] == '10':
+                delete.append(i)
 
         delete.sort(reverse=True)
         for i in delete:
@@ -149,9 +141,8 @@ class MenuView:
 
         return self.display(menu)
 
-    # ----- *** MENU TOURNOI *** -----
     def display_tournament_new(self):
-        self.format_title(' ajout nouveau tournoi ')
+        self.format_title('ajout nouveau tournoi')
 
     def display_menu_tournament(self):
         self.headings('menu tournoi')

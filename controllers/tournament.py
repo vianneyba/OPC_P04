@@ -152,9 +152,12 @@ class TournamentController:
 
     @classmethod
     def view_tournaments(self, view):
-        for index, tournament in enumerate(Tournament.all_tournaments):
-            view.display_list_tournament(tournament, index+1)
-        return view.choice_tournament()
+        if len(Tournament.all_tournaments) > 0:
+            for index, tournament in enumerate(Tournament.all_tournaments):
+                view.display_list_tournament(tournament, index+1)
+            return view.choice_tournament()
+        else:
+            return 'q' 
 
     def get_ctr_time(self, ctr_time):
         if ctr_time == '1':
@@ -181,7 +184,7 @@ class TournamentController:
             continu = True
             p_one = match.player_one
             p_two = match.player_two
-            self.view.display_list_tournaments([p_one, p_two])
+            self.view.display_list_players([p_one, p_two])
 
             while continu:
                 select = self.view.finish_match(p_one, p_two)
@@ -232,7 +235,18 @@ class TournamentController:
                 self.add_player(tournament, self.view, add=True)
             elif select == '9':
                 self.create_round(tournament)
+            elif select == '10':
+                self.change_player_rating(tournament.get_players())
         self.lnk.init()
+
+    def change_player_rating(self, players):
+        pc = PlayerController(self.view)
+        for player in players:
+            txt = f'{player.firstname} {player.lastname} ({player.points} pts)'
+            self.view.headings(txt)
+            player.rating = pc.field_rating(
+                player.rating
+            )
 
 
 class RoundController:

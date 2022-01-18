@@ -56,7 +56,7 @@ class Controller:
                     self.view.display_list_players(players)
                 elif self.lnk.sub_page == 'edit_player':
                     players = Player_C.get_all_players_by_name()
-                    self.view.display_list_players(players, True)
+                    self.view.display_list_players(players)
                     number = int(self.view.select_player()) - 1
                     p_select = players[number]
 
