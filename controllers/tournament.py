@@ -20,7 +20,7 @@ class TournamentController:
             message = f'Nouveau Lieu ({txt}): '
         else:
             message = 'Entrer le lieu du tournoi: '
-        return self.form(self, self.view, message, Vld.tournament_place)
+        return self.form(self.view, message, Vld.tournament_place)
 
     def field_ctr_time(self, txt=None):
         if txt:
@@ -33,47 +33,44 @@ class TournamentController:
                 'Côntrole du temps '
                 '([1] Bullet, [2] Blitz, [3] Coup rapide): '
             )
-        ctr_time = self.form(
-            self, self.view, message, Vld.tournament_ctr_time
-        )
-        return self.get_ctr_time(self, ctr_time)
+        ctr_time = self.form(self.view, message, Vld.tournament_ctr_time)
+        return self.get_ctr_time(ctr_time)
 
     def field_description(self, txt=None):
         if txt:
             message = f'Entrer la nouvelle description ({txt}): '
         else:
             message = 'Entrer une description: '
-        return self.form(self, self.view, message, Vld.tournament_description)
+        return self.form(self.view, message, Vld.tournament_description)
 
     def field_name(self, txt=None):
         if txt:
             message = f'Entrer le nouveau nom du tournoi [{txt}]: '
         else:
             message = 'Entrer le nom du tournoi: '
-        return self.form(self, self.view, message, Vld.tournament_name)
+        return self.form(self.view, message, Vld.tournament_name)
 
     def field_start_date(self, txt=None):
         if txt:
             message = f'Changer la date de début ({txt}): '
         else:
             message = 'Entrer la date du début du tournoi (jj/mm/yyyy): '
-        return self.form(self, self.view, message, Vld.tournament_date_start)
+        return self.form(self.view, message, Vld.tournament_date_start)
 
     def field_nbr_days(self, txt=None):
         if txt:
             message = f'Durée du tournoi ({txt}): '
         else:
             message = 'Combien de jour durera la tournoi [1]: '
-        return self.form(self, self.view, message, Vld.tournament_duration)
+        return self.form(self.view, message, Vld.tournament_duration)
 
     def field_nbr_rounds(self, txt=None):
         if txt:
             message = f'Nombre de tours ({txt}): '
         else:
             message = 'Nombre de tours [4]: '
-        return self.form(self, self.view, message, Vld.tournament_rounds)
+        return self.form(self.view, message, Vld.tournament_rounds)
 
-    @classmethod
     def save(self, tournament):
         for player in tournament.players:
             PlayerManagement.save(player.serialize())
@@ -84,35 +81,41 @@ class TournamentController:
 
         TournamentManagement.save(tournament.serialize())
 
-    @classmethod
+    def add_player(self, tournament: Tournament, view, add=False) -> str:
+        select = ''
+        while select not in ['q', 'n']:
+            if select == 'y' or add:
+                add = False
+                new_player = PlayerController.add_player(
+                    view, tournament.count_players()+1
+                )
+                tournament.add_player(new_player)
+            if tournament.count_players() < DEFAULT_NBR_PLAYER:
+                select = view.display_add_player()
+            else:
+                select = 'q'
+
+    def create_round(self, tournament: Tournament):
+        my_round = RoundController.create_round(
+            tournament.get_players(), 'round 1')
+        tournament.add_round(my_round)
+
     def add_tournament(self, view):
         self.view = view
         tournament = Tournament()
 
         view.display_tournament_new()
 
-        tournament.name = self.field_name(self)
-        tournament.place = self.field_place(self)
-        tournament.start_date = self.field_start_date(self)
-        tournament.nbr_days = self.field_nbr_days(self)
-        tournament.nbr_rounds = self.field_nbr_rounds(self)
-        tournament.ctr_time = self.field_ctr_time(self)
-        tournament.description = self.field_description(self)
+        tournament.name = self.field_name()
+        tournament.place = self.field_place()
+        tournament.start_date = self.field_start_date()
+        tournament.nbr_days = self.field_nbr_days()
+        tournament.nbr_rounds = self.field_nbr_rounds()
+        tournament.ctr_time = self.field_ctr_time()
+        tournament.description = self.field_description()
 
-        self.lnk.init()
-        while self.lnk.next is False:
-            while tournament.count_players() < DEFAULT_NBR_PLAYER:
-                new_player = PlayerController.add_player(
-                    view, tournament.count_players()+1
-                )
-                tournament.add_player(new_player)
+        self.add_player(tournament, self.view)
 
-            self.lnk.next = True
-
-        my_round = RoundController.create_round(
-            tournament.get_players(), 'round 1'
-        )
-        tournament.add_round(my_round)
         return tournament
 
     @classmethod
@@ -171,13 +174,15 @@ class TournamentController:
             if self.lnk.next is True:
                 return response
 
-    @classmethod
     def menu_edit_tournament(self, view, tournament):
         self.view = view
         select = '0'
 
         while select != 'q':
-            select = view.display_edit_tournament_menu(tournament.is_finish())
+            select = view.display_edit_tournament_menu(
+                is_close=tournament.is_finish(),
+                end_player=tournament.count_players() >= DEFAULT_NBR_PLAYER,
+                nb_round=len(tournament.rounds))
             if select == '1':
                 if not tournament.is_finish():
                     last_round = tournament.get_last_round()
@@ -192,7 +197,8 @@ class TournamentController:
                         while continu:
                             select_one = view.finish_match(p_one, p_two)
                             if select_one in ['1', '2', '3']:
-                                MatchController.add_point(int(select_one), match)
+                                MatchController.add_point(
+                                    int(select_one), match)
                                 continu = False
 
                     last_round.finish()
@@ -221,6 +227,10 @@ class TournamentController:
             elif select == '7':
                 tournament.nbr_days = self.field_nbr_days(
                     self, tournament.nbr_days)
+            elif select == '8' and tournament.count_players() < DEFAULT_NBR_PLAYER:
+                self.add_player(tournament, self.view, add=True)
+            elif select == '9':
+                self.create_round(tournament)
         self.lnk.init()
 
 

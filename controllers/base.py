@@ -1,6 +1,6 @@
 from services.services import PlayerManagement
 from controllers.player import PlayerController as Player_C
-from controllers.tournament import TournamentController as Tournament_C
+from controllers.tournament import TournamentController
 from models.linktracking import LinkTracking
 from models.tournament import Tournament
 
@@ -9,6 +9,7 @@ class Controller:
     def __init__(self, menu_view):
         self.view = menu_view
         self.lnk = LinkTracking()
+        self.tc = TournamentController(self.view)
 
     def run(self):
         while True:
@@ -28,7 +29,7 @@ class Controller:
                     break
 
             if self.lnk.page == 'new_tournament':
-                Tournament_C.add_tournament(self.view)
+                self.tc.add_tournament(self.view)
                 self.lnk.page = ''
             elif self.lnk.page == 'player':
                 select = self.view.display_menu_player()
@@ -89,24 +90,24 @@ class Controller:
                     self.lnk.sub_page = ''
 
                 if self.lnk.sub_page == 'new_tournament':
-                    Tournament_C.add_tournament(self.view)
+                    self.tc.add_tournament(self.view)
                     self.lnk.page = ''
                 elif self.lnk.sub_page == 'tournament_list':
-                    t_id = Tournament_C.view_tournaments(self.view)
+                    t_id = self.tc.view_tournaments(self.view)
                     if t_id == 'q':
                         self.lnk.sub_page = ''
                     else:
                         t_id = int(t_id) - 1
-                        Tournament_C.menu_edit_tournament(
+                        self.tc.menu_edit_tournament(
                             self.view, Tournament.all_tournaments[t_id]
                         )
                     self.lnk.sub_page = ''
 
             elif self.lnk.page == 'export':
                 for tournament in Tournament.all_tournaments:
-                    Tournament_C.save(tournament)
+                    self.tc.save(tournament)
                 self.lnk.page = ''
             elif self.lnk.page == 'import':
                 Player_C.import_all_players()
-                Tournament_C.import_all_tournament()
+                self.tc.import_all_tournament()
                 self.lnk.page = ''

@@ -1,3 +1,6 @@
+from config import DEFAULT_NBR_PLAYER
+
+
 class MenuView:
 
     def headings(self, texte):
@@ -112,23 +115,38 @@ class MenuView:
         print(f'Description: {tournament.description}')
         nbr_rounds = f'{len(tournament.rounds)}/{tournament.nbr_rounds}'
         print(f'Nombre de tour: {nbr_rounds}')
+        nbr_players = f'{len(tournament.players)}/{DEFAULT_NBR_PLAYER}'
+        print(f'Nombre de joueur: {nbr_players}')
 
     def choice_tournament(self):
         return input('Taper l\'index du tournoi a modifier:')
 
-    def display_edit_tournament_menu(self, is_close=False):
+    def display_edit_tournament_menu(self, is_close=False, end_player=True, nb_round=0):
         self.headings('Edition d\'un tournoi')
         menu = [
             ('1', 'Fin de round (mise à jour des scores): '),
-            ('2', 'change le nom'),
+            ('2', 'changer le nom'),
             ('3', 'changer la description'),
             ('4', 'changer le controlle du temps'),
             ('5', 'changer la localisation'),
             ('6', 'changer la date du début de tournoi'),
-            ('7', 'changer la durée du tournoi')
+            ('7', 'changer la durée du tournoi'),
+            ('8', 'Ajouter des joueurs'),
+            ('9', 'Creer le round')
         ]
-        if is_close:
-            menu.pop(0)
+        delete = []
+        for i, el in enumerate(menu):
+            if is_close and el[0] == '1':
+                delete.append(i)
+            if end_player is True and el[0] == '8':
+                delete.append(i)
+            if (end_player is False or nb_round > 0) and el[0] == '9':
+                delete.append(i)
+
+        delete.sort(reverse=True)
+        for i in delete:
+            menu.pop(i)
+
         return self.display(menu)
 
     # ----- *** MENU TOURNOI *** -----
@@ -148,3 +166,6 @@ class MenuView:
         print(f'[2] si le Joueur {p_two.firstname} {p_two.lastname} a gagné')
         print('[3] pour une égalité')
         return input('votre choix: ')
+
+    def display_add_player(self):
+        return input('Ajouter un joueur [y/n]: ')
