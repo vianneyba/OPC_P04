@@ -12,6 +12,67 @@ from config import DEFAULT_NBR_PLAYER
 class TournamentController:
     lnk = LinkTracking()
 
+    def __init__(self, view):
+        self.view = view
+
+    def field_place(self, txt=None):
+        if txt:
+            message = f'Nouveau Lieu ({txt}): '
+        else:
+            message = 'Entrer le lieu du tournoi: '
+        return self.form(self, self.view, message, Vld.tournament_place)
+
+    def field_ctr_time(self, txt=None):
+        if txt:
+            message = (
+                '[1] Bullet, [2] Blitz, [3] Coup rapide '
+                f'(actuelle = {txt}): '
+            )
+        else:
+            message = (
+                'Côntrole du temps '
+                '([1] Bullet, [2] Blitz, [3] Coup rapide): '
+            )
+        ctr_time = self.form(
+            self, self.view, message, Vld.tournament_ctr_time
+        )
+        return self.get_ctr_time(self, ctr_time)
+
+    def field_description(self, txt=None):
+        if txt:
+            message = f'Entrer la nouvelle description ({txt}): '
+        else:
+            message = 'Entrer une description: '
+        return self.form(self, self.view, message, Vld.tournament_description)
+
+    def field_name(self, txt=None):
+        if txt:
+            message = f'Entrer le nouveau nom du tournoi [{txt}]: '
+        else:
+            message = 'Entrer le nom du tournoi: '
+        return self.form(self, self.view, message, Vld.tournament_name)
+
+    def field_start_date(self, txt=None):
+        if txt:
+            message = f'Changer la date de début ({txt}): '
+        else:
+            message = 'Entrer la date du début du tournoi (jj/mm/yyyy): '
+        return self.form(self, self.view, message, Vld.tournament_date_start)
+
+    def field_nbr_days(self, txt=None):
+        if txt:
+            message = f'Durée du tournoi ({txt}): '
+        else:
+            message = 'Combien de jour durera la tournoi [1]: '
+        return self.form(self, self.view, message, Vld.tournament_duration)
+
+    def field_nbr_rounds(self, txt=None):
+        if txt:
+            message = f'Nombre de tours ({txt}): '
+        else:
+            message = 'Nombre de tours [4]: '
+        return self.form(self, self.view, message, Vld.tournament_rounds)
+
     @classmethod
     def save(self, tournament):
         for player in tournament.players:
@@ -25,43 +86,18 @@ class TournamentController:
 
     @classmethod
     def add_tournament(self, view):
+        self.view = view
         tournament = Tournament()
 
         view.display_tournament_new()
 
-        message = 'Entrer le nom du tournoi: '
-        tournament.name = self.form(
-            self, view, message, Vld.tournament_name
-        )
-
-        message = 'Entrer le lieu du tournoi: '
-        tournament.place = self.form(self, view, message, Vld.tournament_place)
-
-        message = 'Entrer la date du début du tournoi (jj/mm/yyyy): '
-        tournament.start_date = self.form(
-            self, view, message, Vld.tournament_date_start
-        )
-
-        message = 'Combien de jour durera la tournoi [1]: '
-        tournament.nbr_days = self.form(
-            self, view, message, Vld.tournament_duration
-        )
-
-        message = 'Nombre de tours [4]: '
-        tournament.nbr_rounds = self.form(
-            self, view, message, Vld.tournament_rounds
-            )
-
-        message = 'Côntrole du temps ([1] Bullet, [2] Blitz, [3] Coup rapide): '
-        ctr_time = self.form(
-            self, view, message, Vld.tournament_ctr_time
-        )
-        tournament.ctr_time = self.get_ctr_time(self, ctr_time)
-
-        message = 'Entrer une description: '
-        tournament.description = self.form(
-            self, view, message, Vld.tournament_description
-        )
+        tournament.name = self.field_name(self)
+        tournament.place = self.field_place(self)
+        tournament.start_date = self.field_start_date(self)
+        tournament.nbr_days = self.field_nbr_days(self)
+        tournament.nbr_rounds = self.field_nbr_rounds(self)
+        tournament.ctr_time = self.field_ctr_time(self)
+        tournament.description = self.field_description(self)
 
         self.lnk.init()
         while self.lnk.next is False:
@@ -137,6 +173,7 @@ class TournamentController:
 
     @classmethod
     def menu_edit_tournament(self, view, tournament):
+        self.view = view
         select = '0'
 
         while select != 'q':
@@ -167,23 +204,23 @@ class TournamentController:
                         )
                         tournament.add_round(my_round)
             elif select == '2':
-                message = f'Entrer le nouveau nom du tournoi [{tournament.name}]: '
-                tournament.name = self.form(
-                    self, view, message, Vld.tournament_name
-                )
+                tournament.name = self.field_name(
+                    self, tournament.name)
             elif select == '3':
-                self.lnk.init()
-                while self.lnk.next is False:
-                    message = 'Entrer la nouvelle description: '
-                    tournament.description = self.form(
-                        self, view, message, Vld.tournament_ctr_time
-                    )
-            if select == '4':
-                message = 'Côntrole du temps ([1] Bullet, [2] Blitz, [3] Coup rapide): '
-                ctr_time = self.form(
-                    self, view, message, Vld.tournament_ctr_time
-                )
-                tournament.ctr_time = self.get_ctr_time(self, ctr_time)
+                tournament.description = self.field_description(
+                    self, txt=tournament.description)
+            elif select == '4':
+                tournament.ctr_time = self.field_ctr_time(
+                    self, txt=tournament.ctr_time)
+            elif select == '5':
+                tournament.place = self.field_place(
+                    self, txt=tournament.place)
+            elif select == '6':
+                tournament.start_date = self.field_start_date(
+                    self, tournament.start_date)
+            elif select == '7':
+                tournament.nbr_days = self.field_nbr_days(
+                    self, tournament.nbr_days)
         self.lnk.init()
 
 

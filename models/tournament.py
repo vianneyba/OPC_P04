@@ -1,4 +1,6 @@
 import uuid
+from dateutil.parser import parse
+from datetime import timedelta
 
 
 class Tournament:
@@ -77,3 +79,8 @@ class Tournament:
 
     def add_round(self, round):
         self.rounds.append(round)
+
+    def end_date(self):
+        d = parse(self.start_date, fuzzy=False)
+        new_d = d + timedelta(days=self.nbr_days-1)
+        return new_d.strftime("%d/%m/%Y")

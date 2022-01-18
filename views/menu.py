@@ -15,7 +15,7 @@ class MenuView:
             print(f'[{item[0]}] {item[1]}')
 
         print('[Q] Quitter')
-        return input('entrer le numéro du menu:')
+        return input('entrer le numéro du menu: ')
 
     def display_menu(self, ):
         self.headings('menu')
@@ -107,7 +107,7 @@ class MenuView:
         print(f'Nom: {tournament.name}')
         print(f'Lieu: {tournament.place}')
         print(f'Date du début: {tournament.start_date}')
-        print(f'Date de fin: {tournament.start_date}')
+        print(f'Date de fin: {tournament.end_date()}')
         print(f'Côntrole du temps: {tournament.ctr_time}')
         print(f'Description: {tournament.description}')
         nbr_rounds = f'{len(tournament.rounds)}/{tournament.nbr_rounds}'
