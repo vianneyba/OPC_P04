@@ -174,6 +174,23 @@ class TournamentController:
             if self.lnk.next is True:
                 return response
 
+    def close_round(self, my_round):
+        matches = my_round.matches
+
+        for match in matches:
+            continu = True
+            p_one = match.player_one
+            p_two = match.player_two
+            self.view.display_list_tournaments([p_one, p_two])
+
+            while continu:
+                select = self.view.finish_match(p_one, p_two)
+                if select in ['1', '2', '3']:
+                    MatchController.add_point(int(select), match)
+                    continu = False
+
+            my_round.finish()
+
     def menu_edit_tournament(self, view, tournament):
         self.view = view
         select = '0'
@@ -185,23 +202,7 @@ class TournamentController:
                 nb_round=len(tournament.rounds))
             if select == '1':
                 if not tournament.is_finish():
-                    last_round = tournament.get_last_round()
-                    matches = last_round.matches
-
-                    for match in matches:
-                        continu = True
-                        p_one = match.player_one
-                        p_two = match.player_two
-                        view.display_list_tournaments([p_one, p_two])
-
-                        while continu:
-                            select_one = view.finish_match(p_one, p_two)
-                            if select_one in ['1', '2', '3']:
-                                MatchController.add_point(
-                                    int(select_one), match)
-                                continu = False
-
-                    last_round.finish()
+                    self.close_round(tournament.get_last_round())
                     if tournament.nbr_rounds > len(tournament.rounds):
                         my_round = RoundController.create_round(
                             tournament.get_players(),
