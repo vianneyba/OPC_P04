@@ -44,6 +44,14 @@ class Tournament:
         players = sorted(self.players, key=lambda x: x.points)
         return players
 
+    def get_players_by_rating(self):
+        players = sorted(self.players, key=lambda x: x.rating)
+        return players
+
+    def get_players_by_lastname(self):
+        players = sorted(self.players, key=lambda x: x.lastname)
+        return players
+
     def get_rounds_id(self):
         rounds_id = []
         for round_t in self.rounds:

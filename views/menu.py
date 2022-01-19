@@ -180,3 +180,26 @@ class MenuView:
             ('2', 'Ordre alphabétique')
         ]
         return self.display(menu)
+
+    def display_list_tournament_online(self, tournaments):
+        print(f'{"":-^{self.longeur}}')
+        print(f'{" Liste des tournois ":-^{self.longeur}}')
+        print(f'{"":-^{self.longeur}}')
+        div = 4
+        print(
+            f'{"index":^{floor(self.longeur/div)}}'
+            f'{"nom":^{floor(self.longeur/div)}}'
+            f'{"date début":^{floor(self.longeur/div)}}'
+            f'{"date fin":^{floor(self.longeur/div)}}'
+        )
+        for i, tournament in enumerate(tournaments):
+            print(
+                f'{i+1:^{floor(self.longeur/div)}}'
+                f'{tournament.name:^{floor(self.longeur/div)}}'
+                f'{tournament.start_date:^{floor(self.longeur/div)}}'
+                f'{tournament.end_date():^{floor(self.longeur/div)}}'
+            )
+        print()
+
+    def display_select_tournament(self):
+        return input('Choisir le tournoi: ')

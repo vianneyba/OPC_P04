@@ -12,7 +12,7 @@ from config import DEFAULT_NBR_PLAYER
 class TournamentController:
     lnk = LinkTracking()
 
-    def __init__(self, view):
+    def __init__(self, view=None):
         self.view = view
 
     def field_place(self, txt=None):
@@ -157,7 +157,7 @@ class TournamentController:
                 view.display_list_tournament(tournament, index+1)
             return view.choice_tournament()
         else:
-            return 'q' 
+            return 'q'
 
     def get_ctr_time(self, ctr_time):
         if ctr_time == '1':
@@ -231,7 +231,8 @@ class TournamentController:
             elif select == '7':
                 tournament.nbr_days = self.field_nbr_days(
                     self, tournament.nbr_days)
-            elif select == '8' and tournament.count_players() < DEFAULT_NBR_PLAYER:
+            elif (select == '8' and
+                  tournament.count_players() < DEFAULT_NBR_PLAYER):
                 self.add_player(tournament, self.view, add=True)
             elif select == '9':
                 self.create_round(tournament)

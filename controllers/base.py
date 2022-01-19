@@ -17,13 +17,39 @@ class Controller:
         if select == '1':
             self.lnk.sub_page = self.view.display_menu_order()
             if self.lnk.sub_page == '1':
-                players = Player_C.get_all_players_by_name()
-                self.view.display_list_players(players)
-            elif self.lnk.sub_page == '2':
                 players = Player_C.get_all_players_by_rating()
                 self.view.display_list_players(players)
+            elif self.lnk.sub_page == '2':
+                players = Player_C.get_all_players_by_name()
+                self.view.display_list_players(players)
             elif self.lnk.sub_page == 'q':
-                self.lnk.page = ''
+                self.select = ''
+        elif select == '2':
+            while True:
+                tournaments = Tournament.all_tournaments
+                self.view.display_list_tournament_online(tournaments)
+                t_id = self.view.display_select_tournament()
+
+                try:
+                    t_id = int(t_id) - 1
+                    players = tournaments[t_id].get_players()
+                    print(players)
+
+                    self.lnk.sub_page = self.view.display_menu_order()
+                    if self.lnk.sub_page == '1':
+                        players = sorted(players, key=lambda x: x.rating)
+                        self.view.display_list_players(players)
+                        input("suite")
+                    elif self.lnk.sub_page == '2':
+                        players = sorted(players, key=lambda x: x.lastname)
+                        self.view.display_list_players(players)
+                        input("suite")
+                except ValueError:
+                    break
+        elif select == '3':
+            tournaments = Tournament.all_tournaments
+            self.view.display_list_tournament_online(tournaments)
+            input("suite")
         elif select == 'q':
             self.lnk.page = ''
 
