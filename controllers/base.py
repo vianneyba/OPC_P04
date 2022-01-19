@@ -1,5 +1,5 @@
 from controllers.player import PlayerController
-from controllers.tournament import TournamentController, RoundController
+from controllers.tournament import TournamentController
 from models.linktracking import LinkTracking
 from models.tournament import Tournament
 from models.player import Player
@@ -100,14 +100,12 @@ class Controller:
     def menu_edit_tournament(self):
         if self.select == '1':
             if not self.tournament_selected.is_finish():
-                self.close_round(self.tournament_selected.get_last_round())
+                self.tc.close_round(self.tournament_selected.get_last_round())
                 if self.tournament_selected.nbr_rounds > len(self.tournament_selected.rounds):
-                    my_round = RoundController.create_round(
-                        self.tournament_selected.get_players(),
+                    self.tc.create_round(
+                        self.tournament_selected,
                         f'round {len(self.tournament_selected.rounds)+1}',
-                        first=False
-                    )
-                    self.tournament_selected.add_round(my_round)
+                        first=False)
         elif self.select == '2':
             self.tournament_selected.name = self.tc.field_name(
                 self.tournament_selected.name)
@@ -130,14 +128,13 @@ class Controller:
                 self.tournament_selected.count_players() < DEFAULT_NBR_PLAYER):
             self.add_player(self.tournament_selected, self.view, add=True)
         elif self.select == '9':
-            self.create_round(self.tournament_selected)
+            self.tc.create_round(self.tournament_selected)
         elif self.select == '10':
             self.change_player_rating(self.tournament_selected.get_players())
         elif self.select == 'q':
             self.tournament_selected = None
             self.page = 'home'
             self.menu = self.view.display_menu()
-        self.view.display_list_tournament_online([self.tournament_selected])
 
     def menu_rapport_player(self):
         if self.select == '1':

@@ -109,9 +109,9 @@ class TournamentController:
             else:
                 select = 'q'
 
-    def create_round(self, tournament: Tournament):
+    def create_round(self, tournament: Tournament, name='round 1', first=True):
         my_round = RoundController.create_round(
-            tournament.get_players(), 'round 1')
+            tournament.get_players(), name, first)
         tournament.add_round(my_round)
 
     def add_tournament(self):
@@ -131,7 +131,6 @@ class TournamentController:
 
         return tournament
 
-    @classmethod
     def import_all_tournament(self):
         Tournament.all_tournaments = []
         tournaments = TournamentManagement.get_all()
@@ -167,9 +166,6 @@ class TournamentController:
         if len(Tournament.all_tournaments) > 0:
             for index, tournament in enumerate(Tournament.all_tournaments):
                 self.view.display_list_tournament(tournament, index+1)
-        #     return view.choice_tournament()
-        # else:
-        #     return 'q'
 
     def get_ctr_time(self, ctr_time):
         if ctr_time == '1':
@@ -206,51 +202,6 @@ class TournamentController:
 
             my_round.finish()
 
-    def menu_edit_tournament(self, tournament):
-        select = '0'
-
-        while select != 'q':
-            print(self.view.display_edit_tournament_menu(
-                is_close=tournament.is_finish(),
-                end_player=tournament.count_players() >= DEFAULT_NBR_PLAYER,
-                nb_round=len(tournament.rounds)))
-            if select == '1':
-                if not tournament.is_finish():
-                    self.close_round(tournament.get_last_round())
-                    if tournament.nbr_rounds > len(tournament.rounds):
-                        my_round = RoundController.create_round(
-                            tournament.get_players(),
-                            f'round {len(tournament.rounds)+1}',
-                            first=False
-                        )
-                        tournament.add_round(my_round)
-            elif select == '2':
-                tournament.name = self.field_name(
-                    self, tournament.name)
-            elif select == '3':
-                tournament.description = self.field_description(
-                    self, txt=tournament.description)
-            elif select == '4':
-                tournament.ctr_time = self.field_ctr_time(
-                    self, txt=tournament.ctr_time)
-            elif select == '5':
-                tournament.place = self.field_place(
-                    self, txt=tournament.place)
-            elif select == '6':
-                tournament.start_date = self.field_start_date(
-                    self, tournament.start_date)
-            elif select == '7':
-                tournament.nbr_days = self.field_nbr_days(
-                    self, tournament.nbr_days)
-            elif (select == '8' and
-                  tournament.count_players() < DEFAULT_NBR_PLAYER):
-                self.add_player(tournament, self.view, add=True)
-            elif select == '9':
-                self.create_round(tournament)
-            elif select == '10':
-                self.change_player_rating(tournament.get_players())
-        self.lnk.init()
-
     def change_player_rating(self, players):
         pc = PlayerController(self.view)
         for player in players:
@@ -267,7 +218,6 @@ class RoundController:
     def create_round(self, players_list, name, first=True):
         round_one = Round({'name': name})
         players_list = sorted(players_list, key=lambda x: x.rating)
-
         if first:
             half = len(players_list)//2
             list_one = players_list[:half]
@@ -280,7 +230,8 @@ class RoundController:
                 match.add_player(player_two)
                 round_one.add_match(match)
         else:
-            players_list = sorted(players_list, key=lambda x: x.points)
+            players_list = sorted(
+                players_list, key=lambda x: x.points, reverse=True)
             while len(players_list) > 1:
                 player_one = players_list.pop(0)
                 player_two = players_list.pop(0)
