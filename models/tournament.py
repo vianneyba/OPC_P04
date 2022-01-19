@@ -92,3 +92,14 @@ class Tournament:
         d = parse(self.start_date, fuzzy=False)
         new_d = d + timedelta(days=self.nbr_days-1)
         return new_d.strftime("%d/%m/%Y")
+
+    def get_rounds(self):
+        return self.rounds
+
+    def get_all_matches(self):
+        list_matches = []
+        for r in self.rounds:
+            for match in r.matches:
+                list_matches.append(match)
+
+        return list_matches

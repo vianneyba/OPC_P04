@@ -169,7 +169,7 @@ class MenuView:
             ('2', 'Liste des joueurs d\'un tournoi'),
             ('3', 'liste des tournois'),
             ('4', 'liste des tours d\'un tournoi'),
-            ('8', 'liste des matchs d\'un tournoi')
+            ('5', 'liste des matchs d\'un tournoi')
         ]
         return self.display(menu)
 
@@ -201,5 +201,49 @@ class MenuView:
             )
         print()
 
+    def display_round(self, name, rounds):
+        print(f'{"":-^{self.longeur}}')
+        print(f'{" tournoi: "+name+" - rounds ":-^{self.longeur}}')
+        print(f'{"":-^{self.longeur}}')
+        div = 3
+        print(
+            f'{"nom":^{floor(self.longeur/div)}}'
+            f'{"date début":^{floor(self.longeur/div)}}'
+            f'{"date fin":^{floor(self.longeur/div)}}'
+        )
+        for my_round in rounds:
+            name = my_round.name
+            start_date = my_round.get_start_date_to_txt()
+            end_date = my_round.get_end_date_to_txt()
+            print(
+                f'{name:^{floor(self.longeur/div)}}'
+                f'{start_date:^{floor(self.longeur/div)}}'
+                f'{end_date:^{floor(self.longeur/div)}}'
+            )
+            self.display_list_match(my_round.matches)
+        print()
+
     def display_select_tournament(self):
         return input('Choisir le tournoi: ')
+
+    def display_list_match(self, matches):
+        div = 4
+        print(f'{"":-^{self.longeur}}')
+        print(f'{" match ":-^{self.longeur}}')
+        print(f'{"":-^{self.longeur}}')
+        print(
+            f'{"Joueur 1":^{floor(self.longeur/div)}}'
+            f'{"Score J1":^{floor(self.longeur/div)}}'
+            f'{"Joueur 2":^{floor(self.longeur/div)}}'
+            f'{"Score J2":^{floor(self.longeur/div)}}'
+        )
+        for match in matches:
+            p_one = f'{match.player_one.firstname} {match.player_one.lastname}'
+            p_two = f'{match.player_two.firstname} {match.player_two.lastname}'
+            print(
+                f'{p_one:^{floor(self.longeur/div)}}'
+                f'{match.player_one_pt:^{floor(self.longeur/div)}}'
+                f'{p_two:^{floor(self.longeur/div)}}'
+                f'{match.player_two_pt:^{floor(self.longeur/div)}}'
+            )
+        print()

@@ -15,6 +15,20 @@ class TournamentController:
     def __init__(self, view=None):
         self.view = view
 
+    def select_tournament(self):
+        tournaments = Tournament.all_tournaments
+        self.view.display_list_tournament_online(tournaments)
+        t_id = self.view.display_select_tournament()
+
+        try:
+            t_id = int(t_id)-1
+            if t_id < len(tournaments):
+                return tournaments[t_id]
+            else:
+                return None
+        except ValueError:
+            return None
+
     def field_place(self, txt=None):
         if txt:
             message = f'Nouveau Lieu ({txt}): '

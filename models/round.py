@@ -50,5 +50,15 @@ class Round:
     def finish(self):
         self.end_date = datetime.now()
 
+    def get_start_date_to_txt(self):
+        return self.start_date.strftime("%H:%M %d/%m/%Y")
+
+    def get_end_date_to_txt(self):
+        if self.end_date:
+            end_date = self.end_date.strftime("%H:%M %d/%m/%Y")
+        else:
+            end_date = "En cours"
+        return end_date
+
     def __str__(self):
         return f'id: {self.id}, name: {self.name}'

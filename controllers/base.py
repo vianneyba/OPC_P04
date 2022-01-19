@@ -26,14 +26,10 @@ class Controller:
                 self.select = ''
         elif select == '2':
             while True:
-                tournaments = Tournament.all_tournaments
-                self.view.display_list_tournament_online(tournaments)
-                t_id = self.view.display_select_tournament()
+                tournament = self.tc.select_tournament()
 
-                try:
-                    t_id = int(t_id) - 1
-                    players = tournaments[t_id].get_players()
-                    print(players)
+                if tournament:
+                    players = tournament.get_players()
 
                     self.lnk.sub_page = self.view.display_menu_order()
                     if self.lnk.sub_page == '1':
@@ -44,12 +40,31 @@ class Controller:
                         players = sorted(players, key=lambda x: x.lastname)
                         self.view.display_list_players(players)
                         input("suite")
-                except ValueError:
+                else:
                     break
         elif select == '3':
             tournaments = Tournament.all_tournaments
             self.view.display_list_tournament_online(tournaments)
             input("suite")
+        elif select == '4':
+            while True:
+                tournament = self.tc.select_tournament()
+
+                if tournament:
+                    rounds = tournament.get_rounds()
+                    self.view.display_round(tournament.name, rounds)
+                    input('suite')
+                else:
+                    break
+        elif select == '5':
+            while True:
+                tournament = self.tc.select_tournament()
+
+                if tournament:
+                    self.view.display_list_match(tournament.get_all_matches())
+                    input("suite")
+                else:
+                    break
         elif select == 'q':
             self.lnk.page = ''
 
