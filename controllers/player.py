@@ -1,7 +1,7 @@
 from models.linktracking import LinkTracking
 from controllers.validation import Validation
 from models.player import Player
-from services.services import PlayerManagement as Player_M
+from services.services import PlayerManagement
 
 
 class PlayerController:
@@ -22,7 +22,7 @@ class PlayerController:
     def get_all_players_by_rating(self):
         return sorted(Player.all_players, key=lambda x: x.rating)
 
-    def get_player_by_name_and_birthday(player_searched: Player):
+    def get_player_by_name_and_birthday(self, player_searched: Player):
         for player in Player.all_players:
             if (
                 player.firstname == player_searched['firstname']
@@ -38,37 +38,25 @@ class PlayerController:
     @classmethod
     def import_all_players(self):
         Player.all_players = []
-        players = Player_M.get_all()
+        players = PlayerManagement.get_all()
         for player in players:
             Player(player)
 
-    @classmethod
-    def add_player(self, view, nbr=1):
-        self.view = view
+    def add_player(self, nbr=1):
         player = {}
 
-        view.display_player_new(nbr)
+        self.view.display_player_new(nbr)
 
-        player['firstname'] = self.field_firstname(self)
-        player['lastname'] = self.field_lastname(self)
-
-        self.lnk.init()
-        while self.lnk.next is False:
-            message = 'date de naissance (jj/mm/yyyy): '
-            player['birthday'] = view.field_text(self.lnk, message)
-            Validation.tournament_date_start(player['birthday'], self.lnk)
+        player['firstname'] = self.field_firstname()
+        player['lastname'] = self.field_lastname()
+        player['birthday'] = self.field_birthday()
 
         player_searched = self.get_player_by_name_and_birthday(player)
         if player_searched is not None:
             return player_searched
 
-        self.lnk.init()
-        while self.lnk.next is False:
-            message = 'entrer son sexe (H/F): '
-            player['gender'] = view.field_text(self.lnk, message)
-            Validation.gender(player['gender'], self.lnk)
-
-        player['rating'] = self.field_rating(self)
+        player['gender'] = self.field_gender()
+        player['rating'] = self.field_rating()
 
         return Player(player)
 
@@ -104,3 +92,28 @@ class PlayerController:
             rating = self.view.field_text(self.lnk, message)
             rating = Validation.rating(rating, self.lnk)
         return rating
+
+    def field_birthday(self, txt=None):
+        self.lnk.init()
+        while self.lnk.next is False:
+            if txt:
+                message = 'date de naissance (jj/mm/yyyy): '
+            else:
+                message = 'date de naissance (jj/mm/yyyy): '
+            birthday = self.view.field_text(self.lnk, message)
+            Validation.tournament_date_start(birthday, self.lnk)
+        return birthday
+
+    def field_gender(self, txt=None):
+        self.lnk.init()
+        while self.lnk.next is False:
+            if txt:
+                message = 'entrer son sexe (H/F): '
+            else:
+                message = 'entrer son sexe (H/F): '
+            gender = self.view.field_text(self.lnk, message)
+            Validation.gender(gender, self.lnk)
+        return gender
+
+    def save(self, player):
+        PlayerManagement.save(player.serialize())

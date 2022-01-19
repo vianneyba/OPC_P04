@@ -6,12 +6,13 @@ class MenuView:
 
     def __init__(self):
         self.longeur = 90
+        self.response = ''
 
     def headings(self, texte):
         texte = f' {texte} '
-        print()
-        print(f'{texte:-^{self.longeur}}')
-        print()
+        self.response = '\n'
+        self.response += f'{texte:-^{self.longeur}}\n'
+        self.response += '\n'
 
     def format_title(self, texte):
         texte = f' {texte} '
@@ -21,12 +22,11 @@ class MenuView:
 
     def display(self, list_menu):
         for item in list_menu:
-            print(f'[{item[0]}] {item[1]}')
+            self.response += f'[{item[0]}] {item[1]}\n'
+        self.response += '[Q] Quitter'
+        return self.response
 
-        print('[Q] Quitter')
-        return input('entrer le numéro du menu: ')
-
-    def display_menu(self, ):
+    def display_menu(self):
         self.headings('menu')
         menu = [
             ('1', 'Créer un tournoi'),
@@ -88,7 +88,7 @@ class MenuView:
                 f'{player.rating:^{floor(self.longeur/div)}}'
                 f'{player.points:^{floor(self.longeur/div)}}'
             )
-        print()
+        # input('continue')
 
     def select_player(self):
         return input('Quel joueur modifier?: ')
@@ -107,7 +107,7 @@ class MenuView:
         nbr_players = f'{len(tournament.players)}/{DEFAULT_NBR_PLAYER}'
         print(f'Nombre de joueur: {nbr_players}')
 
-    def choice_tournament(self):
+    def select_tournament(self):
         return input('Taper l\'index du tournoi a modifier:')
 
     def display_edit_tournament_menu(

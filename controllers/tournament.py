@@ -114,11 +114,10 @@ class TournamentController:
             tournament.get_players(), 'round 1')
         tournament.add_round(my_round)
 
-    def add_tournament(self, view):
-        self.view = view
+    def add_tournament(self):
         tournament = Tournament()
 
-        view.display_tournament_new()
+        self.view.display_tournament_new()
 
         tournament.name = self.field_name()
         tournament.place = self.field_place()
@@ -164,14 +163,13 @@ class TournamentController:
                     my_round.add_match(new_match)
                 t.add_round(my_round)
 
-    @classmethod
-    def view_tournaments(self, view):
+    def view_tournaments(self):
         if len(Tournament.all_tournaments) > 0:
             for index, tournament in enumerate(Tournament.all_tournaments):
-                view.display_list_tournament(tournament, index+1)
-            return view.choice_tournament()
-        else:
-            return 'q'
+                self.view.display_list_tournament(tournament, index+1)
+        #     return view.choice_tournament()
+        # else:
+        #     return 'q'
 
     def get_ctr_time(self, ctr_time):
         if ctr_time == '1':
@@ -208,15 +206,14 @@ class TournamentController:
 
             my_round.finish()
 
-    def menu_edit_tournament(self, view, tournament):
-        self.view = view
+    def menu_edit_tournament(self, tournament):
         select = '0'
 
         while select != 'q':
-            select = view.display_edit_tournament_menu(
+            print(self.view.display_edit_tournament_menu(
                 is_close=tournament.is_finish(),
                 end_player=tournament.count_players() >= DEFAULT_NBR_PLAYER,
-                nb_round=len(tournament.rounds))
+                nb_round=len(tournament.rounds)))
             if select == '1':
                 if not tournament.is_finish():
                     self.close_round(tournament.get_last_round())
