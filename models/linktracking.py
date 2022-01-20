@@ -4,7 +4,6 @@ class LinkTracking:
         self.error = False
         self.next = False
         self.page = ''
-        self.sub_page = ''
 
     def init(self):
         self.message = ''
@@ -12,4 +11,6 @@ class LinkTracking:
         self.next = False
 
     def __str__(self):
-        return f'error: {self.error}, page: {self.page}, sub page: {self.sub_page}'
+        return (
+            f'error: {self.error}, page: {self.page}'
+            f'message:{self.message}')

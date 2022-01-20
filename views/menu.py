@@ -44,8 +44,9 @@ class MenuView:
         menu = [
             ('1', 'Ajouter un joueur'),
             ('2', 'Liste des joueurs par nom'),
-            ('3', 'liste des joueurs par classement'),
-            ('4', 'modifier joueur')
+            ('3', 'Liste des joueurs par classement'),
+            ('4', 'Modifier joueur'),
+            ('5', 'Import joueur')
         ]
         return self.display(menu)
 

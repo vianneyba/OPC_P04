@@ -73,6 +73,8 @@ class Controller:
                 self.menu = self.view.display_edit_player()
             except ValueError:
                 self.go_menu_player()
+        elif self.select == '5':
+            self.pc.import_all_players()
         elif self.select == 'q':
             self.player_selected = None
             self.go_menu_home()
