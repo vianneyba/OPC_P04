@@ -1,15 +1,14 @@
 from controllers.player import PlayerController
 from controllers.tournament import TournamentController
-from models.linktracking import LinkTracking
 from models.tournament import Tournament
 from models.player import Player
 from config import DEFAULT_NBR_PLAYER
+import os
 
 
 class Controller:
     def __init__(self, menu_view):
         self.view = menu_view
-        self.lnk = LinkTracking()
         self.tc = TournamentController(self.view)
         self.pc = PlayerController(self.view)
         self.menu = self.view.display_menu()
@@ -26,6 +25,10 @@ class Controller:
         self.page = 'player'
         self.menu = self.view.display_menu_player()
 
+    def go_menu_rapport(self):
+        self.page = 'rapport'
+        self.menu = self.view.display_menu_rapport()
+
     def menu_home(self):
         if self.select == '1':
             self.tc.add_tournament()
@@ -35,8 +38,7 @@ class Controller:
             self.page = 'tournament'
             self.menu = self.view.display_menu_tournament()
         elif self.select == '4':
-            self.page = 'rapport'
-            self.menu = self.view.display_menu_rapport()
+            self.go_menu_rapport()
         elif self.select == '8':
             self.pc.import_all_players()
             self.tc.import_all_tournament()
@@ -45,6 +47,10 @@ class Controller:
                 self.tc.save(tournament)
             for player in Player.all_players:
                 self.pc.save(player)
+        elif self.select == '10':
+            cmd = 'flake8 --format=html --htmldir=flake8_report'
+            os.system(cmd)
+            self.go_menu_home()
         elif self.select == 'q':
             self.page = 'quit'
 
@@ -158,8 +164,7 @@ class Controller:
             players = self.pc.get_all_players_by_name()
             self.view.display_list_players(players)
         elif self.select == 'q':
-            self.page = 'rapport'
-            self.menu = self.view.display_menu_rapport()
+            self.go_menu_rapport()
 
     def menu_rapport_tournament_player(self):
         players = self.tournament_selected.get_players()
@@ -172,8 +177,7 @@ class Controller:
             self.view.display_list_players(players)
             input("suite")
         elif self.select == 'q':
-            self.page = 'rapport'
-            self.menu = self.view.display_menu_rapport()
+            self.go_menu_rapport()
 
     def menu_rapport(self):
         if self.select == '1':

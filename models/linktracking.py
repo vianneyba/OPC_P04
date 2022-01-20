@@ -4,8 +4,8 @@ class LinkTracking:
         self.error = False
         self.next = False
         self.page = ''
-        self.sub_page= ''
-    
+        self.sub_page = ''
+
     def init(self):
         self.message = ''
         self.error = False

@@ -1,0 +1,10 @@
+[flake8]
+exclude=
+    .gitignore,
+    env/,
+    README.md,
+    requirements.txt,
+    doc/
+    test.py
+
+max-line-length = 100

@@ -34,7 +34,8 @@ class MenuView:
             ('3', 'Tournoi'),
             ('4', 'Rapports'),
             ('8', 'Chargement'),
-            ('9', 'Sauvegarde')
+            ('9', 'Sauvegarde'),
+            ('10', 'rapport flake8')
         ]
         return self.display(menu)
 
@@ -224,6 +225,7 @@ class MenuView:
             name = my_round.name
             start_date = my_round.get_start_date_to_txt()
             end_date = my_round.get_end_date_to_txt()
+            print()
             print(
                 f'{name:^{floor(self.longeur/div)}}'
                 f'{start_date:^{floor(self.longeur/div)}}'
