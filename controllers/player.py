@@ -7,7 +7,6 @@ from services.services import PlayerManagement
 class PlayerController:
 
     lnk = LinkTracking()
-    view = None
 
     def __init__(self, view):
         self.view = view
@@ -97,7 +96,7 @@ class PlayerController:
         self.lnk.init()
         while self.lnk.next is False:
             if txt:
-                message = 'date de naissance (jj/mm/yyyy): '
+                message = f'date de naissance ({txt}): '
             else:
                 message = 'date de naissance (jj/mm/yyyy): '
             birthday = self.view.field_text(self.lnk, message)

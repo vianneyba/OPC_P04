@@ -5,7 +5,7 @@ from math import floor
 class MenuView:
 
     def __init__(self):
-        self.longeur = 90
+        self.longeur = 120
         self.response = ''
 
     def headings(self, texte):
@@ -70,12 +70,13 @@ class MenuView:
         print(f'{"":-^{self.longeur}}')
         print(f'{" Liste des Joueurs ":-^{self.longeur}}')
         print(f'{"":-^{self.longeur}}')
-        div = 6
+        div = 7
         print(
             f'{"index":^{floor(self.longeur/div)}}'
             f'{"prénom":^{floor(self.longeur/div)}}'
             f'{"nom":^{floor(self.longeur/div)}}'
             f'{"genre":^{floor(self.longeur/div)}}'
+            f'{"anniversaire":^{floor(self.longeur/div)}}'
             f'{"place":^{floor(self.longeur/div)}}'
             f'{"points":^{floor(self.longeur/div)}}'
         )
@@ -85,6 +86,7 @@ class MenuView:
                 f'{player.firstname:^{floor(self.longeur/div)}}'
                 f'{player.lastname:^{floor(self.longeur/div)}}'
                 f'{player.gender:^{floor(self.longeur/div)}}'
+                f'{player.birthday:^{floor(self.longeur/div)}}'
                 f'{player.rating:^{floor(self.longeur/div)}}'
                 f'{player.points:^{floor(self.longeur/div)}}'
             )
@@ -185,21 +187,28 @@ class MenuView:
         print(f'{"":-^{self.longeur}}')
         print(f'{" Liste des tournois ":-^{self.longeur}}')
         print(f'{"":-^{self.longeur}}')
-        div = 4
+        div = 9
         print(
             f'{"index":^{floor(self.longeur/div)}}'
-            f'{"nom":^{floor(self.longeur/div)}}'
+            f'{"nom":^{floor(self.longeur/(div/3))}}'
             f'{"date début":^{floor(self.longeur/div)}}'
             f'{"date fin":^{floor(self.longeur/div)}}'
+            f'{"joueurs":^{floor(self.longeur/div)}}'
+            f'{"tours":^{floor(self.longeur/div)}}'
+            f'{"fini":^{floor(self.longeur/div)}}'
         )
         for i, tournament in enumerate(tournaments):
+            nbr_players = f'{len(tournament.players)}/{DEFAULT_NBR_PLAYER}'
+            nbr_rounds = f'{len(tournament.rounds)}/{tournament.nbr_rounds}'
             print(
                 f'{i+1:^{floor(self.longeur/div)}}'
-                f'{tournament.name:^{floor(self.longeur/div)}}'
+                f'{tournament.name:^{floor(self.longeur/(div/3))}}'
                 f'{tournament.start_date:^{floor(self.longeur/div)}}'
                 f'{tournament.end_date():^{floor(self.longeur/div)}}'
+                f'{nbr_players:^{floor(self.longeur/div)}}'
+                f'{nbr_rounds:^{floor(self.longeur/div)}}'
+                f'{tournament.is_finish():^{floor(self.longeur/div)}}'
             )
-        print()
 
     def display_round(self, name, rounds):
         print(f'{"":-^{self.longeur}}')
@@ -221,7 +230,6 @@ class MenuView:
                 f'{end_date:^{floor(self.longeur/div)}}'
             )
             self.display_list_match(my_round.matches)
-        print()
 
     def display_select_tournament(self):
         return input('Choisir le tournoi: ')
@@ -246,4 +254,3 @@ class MenuView:
                 f'{p_two:^{floor(self.longeur/div)}}'
                 f'{match.player_two_pt:^{floor(self.longeur/div)}}'
             )
-        print()

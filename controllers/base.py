@@ -18,12 +18,19 @@ class Controller:
         self.player_selected = None
         self.tournament_selected = None
 
+    def go_menu_home(self):
+        self.page = 'home'
+        self.menu = self.view.display_menu()
+
+    def go_menu_player(self):
+        self.page = 'player'
+        self.menu = self.view.display_menu_player()
+
     def menu_home(self):
         if self.select == '1':
             self.tc.add_tournament()
         elif self.select == '2':
-            self.page = 'player'
-            self.menu = self.view.display_menu_player()
+            self.go_menu_player()
         elif self.select == '3':
             self.page = 'tournament'
             self.menu = self.view.display_menu_tournament()
@@ -54,30 +61,34 @@ class Controller:
             players = self.pc.get_all_players_by_name()
             self.page = 'edit_player'
             self.view.display_list_players(players)
-            number = int(self.view.select_player()) - 1
-            self.player_selected = players[number]
-            self.menu = self.view.display_edit_player()
+            try:
+                number = int(self.view.select_player()) - 1
+                self.player_selected = players[number]
+                self.menu = self.view.display_edit_player()
+            except ValueError:
+                self.go_menu_player()
         elif self.select == 'q':
             self.player_selected = None
-            self.page = 'home'
-            self.menu = self.view.display_menu()
+            self.go_menu_home()
 
     def menu_tournament(self):
         if self.select == '1':
             self.tc.add_tournament()
         elif self.select == '2':
             self.tc.view_tournaments()
-            number = int(self.view.select_tournament()) - 1
-            self.tournament_selected = Tournament.all_tournaments[number]
-            self.menu = self.view.display_edit_tournament_menu(
-                is_close=self.tournament_selected.is_finish(),
-                end_player=self.tournament_selected.count_players() >= DEFAULT_NBR_PLAYER,
-                nb_round=len(self.tournament_selected.rounds))
-            self.page = 'edit_tournament'
+            try:
+                number = int(self.view.select_tournament()) - 1
+                self.tournament_selected = Tournament.all_tournaments[number]
+                self.menu = self.view.display_edit_tournament_menu(
+                    is_close=self.tournament_selected.is_finish(),
+                    end_player=self.tournament_selected.count_players() >= DEFAULT_NBR_PLAYER,
+                    nb_round=len(self.tournament_selected.rounds))
+                self.page = 'edit_tournament'
+            except ValueError:
+                self.go_menu_home()
         elif self.select == 'q':
             self.tournament_selected = None
-            self.page = 'home'
-            self.menu = self.view.display_menu()
+            self.go_menu_home()
 
     def menu_edit_player(self):
         if self.select == '1':
@@ -88,14 +99,18 @@ class Controller:
             self.player_selected.lastname = self.pc.field_lastname(
                 self.player_selected.lastname
             )
+        elif self.select == '3':
+            self.player_selected.birthday = self.pc.field_birthday(
+                self.player_selected.birthday
+            )
         elif self.select == '4':
             self.player_selected.rating = self.pc.field_rating(
                 self.player_selected.rating
             )
         elif self.select == 'q':
-            self.page = 'player'
-            self.menu = self.view.display_menu_player()
-        self.view.display_list_players([self.player_selected])
+            self.go_menu_player()
+        if self.player_selected:
+            self.view.display_list_players([self.player_selected])
 
     def menu_edit_tournament(self):
         if self.select == '1':
@@ -126,15 +141,14 @@ class Controller:
                 self.tournament_selected.nbr_days)
         elif (self.select == '8' and
                 self.tournament_selected.count_players() < DEFAULT_NBR_PLAYER):
-            self.add_player(self.tournament_selected, self.view, add=True)
+            self.tc.add_player(self.tournament_selected, self.view, add=True)
         elif self.select == '9':
             self.tc.create_round(self.tournament_selected)
         elif self.select == '10':
             self.change_player_rating(self.tournament_selected.get_players())
         elif self.select == 'q':
             self.tournament_selected = None
-            self.page = 'home'
-            self.menu = self.view.display_menu()
+            self.go_menu_home()
 
     def menu_rapport_player(self):
         if self.select == '1':
@@ -197,8 +211,7 @@ class Controller:
                 else:
                     break
         elif self.select == 'q':
-            self.page = 'home'
-            self.menu = self.view.display_menu()
+            self.go_menu_home()
 
     def run(self):
         while True:

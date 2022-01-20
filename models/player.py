@@ -33,6 +33,7 @@ class Player:
             f'prénom: {self.firstname}\n'
             f'nom: {self.lastname}\n'
             f'genre: {self.gender}\n'
-            f'classement: {self.rating}'
-            f'classement: {self.birthday}'
+            f'classement: {self.rating}\n'
+            f'classement: {self.birthday}\n'
+            f'points: {self.points}'
         )

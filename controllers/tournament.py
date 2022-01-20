@@ -96,12 +96,13 @@ class TournamentController:
         TournamentManagement.save(tournament.serialize())
 
     def add_player(self, tournament: Tournament, view, add=False) -> str:
+        pc = PlayerController(self.view)
         select = ''
         while select not in ['q', 'n']:
             if select == 'y' or add:
                 add = False
-                new_player = PlayerController.add_player(
-                    view, tournament.count_players()+1
+                new_player = pc.add_player(
+                    tournament.count_players()+1
                 )
                 tournament.add_player(new_player)
             if tournament.count_players() < DEFAULT_NBR_PLAYER:
@@ -164,8 +165,8 @@ class TournamentController:
 
     def view_tournaments(self):
         if len(Tournament.all_tournaments) > 0:
-            for index, tournament in enumerate(Tournament.all_tournaments):
-                self.view.display_list_tournament(tournament, index+1)
+            tournaments = Tournament.all_tournaments
+            self.view.display_list_tournament_online(tournaments)
 
     def get_ctr_time(self, ctr_time):
         if ctr_time == '1':

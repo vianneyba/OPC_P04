@@ -80,6 +80,8 @@ class Tournament:
                 return round
 
     def is_finish(self):
+        if len(self.rounds) == 0:
+            return False
         for round in self.rounds:
             if round.end_date is None:
                 return False
