@@ -133,7 +133,6 @@ class TournamentController:
         return tournament
 
     def import_all_tournament(self):
-        Tournament.all_tournaments = []
         tournaments = TournamentManagement.get_all()
         for tournament in tournaments:
             t = Tournament()
