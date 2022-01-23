@@ -56,6 +56,7 @@ pour lancer l'application
 Le menu "1 Créer un tournoi" ou "3-1 Créer un tournoi" permet de crée un tournoi après avoir rempli les champs suivant:
 
 *Entrer le nom du tournoi: tournoi du 20/01/2022*
+
 *Entrer le lieu du tournoi: lille*
 *Entrer la date du début du tournoi (jj/mm/yyyy): 20/01/2022*
 *Combien de jour durera la tournoi [1]: *
@@ -68,12 +69,17 @@ il est aussi possible d'ajouter les 8 participants au tournoi dans cette section
 ## Ajouter un joueur
 Le menu "2-1 Ajouter un joueur" permet d'ajouter des joueurs sans les lier a un tournoi.
 Avec le menu "3-2-8 Ajouter des joueurs" il est aussi possible d'ajouter des joueurs directement dans le tournoi précédemment selectionné.
-
+***
 *entrer son prénom: bruno*
+<!-- texte en commentaire -->
 *entrer son nom: armant*
+<!-- texte en commentaire -->
 *date de naissance (jj/mm/yyyy): 16/08/1963*
+<!-- texte en commentaire -->
 *entrer son sexe (H/F): h*
+<!-- texte en commentaire -->
 *entrer son classement: 20*
+***
 
 ## Clôturer un tour
 Le menu "3-2-1 Fin de round (mise à jour des scores)" permet de d'indiquer le gagnant sur tous les matches du tour. en validant les matches un nouveau tour est généré.
