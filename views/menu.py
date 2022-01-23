@@ -14,6 +14,8 @@ class MenuView:
         self.response += f'{texte:-^{self.longeur}}\n'
         self.response += '\n'
 
+        return self.response
+
     def format_title(self, texte):
         texte = f' {texte} '
         print(f'{"":-^{self.longeur}}')
@@ -103,7 +105,7 @@ class MenuView:
         print(f'Nom: {tournament.name}')
         print(f'Lieu: {tournament.place}')
         print(f'Date du début: {tournament.start_date}')
-        print(f'Date de fin: {tournament.end_date()}')
+        print(f'Date de fin: {tournament.get_end_date()}')
         print(f'Côntrole du temps: {tournament.ctr_time}')
         print(f'Description: {tournament.description}')
         nbr_rounds = f'{len(tournament.rounds)}/{tournament.nbr_rounds}'
@@ -131,7 +133,7 @@ class MenuView:
         ]
         delete = []
         for i, el in enumerate(menu):
-            if is_close and el[0] == '1':
+            if (is_close or not end_player) and el[0] == '1':
                 delete.append(i)
             if end_player is True and el[0] == '8':
                 delete.append(i)
@@ -205,8 +207,8 @@ class MenuView:
             print(
                 f'{i+1:^{floor(self.longeur/div)}}'
                 f'{tournament.name:^{floor(self.longeur/(div/3))}}'
-                f'{tournament.start_date:^{floor(self.longeur/div)}}'
-                f'{tournament.end_date():^{floor(self.longeur/div)}}'
+                f'{tournament.get_start_date():^{floor(self.longeur/div)}}'
+                f'{tournament.get_end_date():^{floor(self.longeur/div)}}'
                 f'{nbr_players:^{floor(self.longeur/div)}}'
                 f'{nbr_rounds:^{floor(self.longeur/div)}}'
                 f'{tournament.is_finish():^{floor(self.longeur/div)}}'
@@ -257,3 +259,9 @@ class MenuView:
                 f'{p_two:^{floor(self.longeur/div)}}'
                 f'{match.player_two_pt:^{floor(self.longeur/div)}}'
             )
+
+    def display_save(self):
+        return '\n\t[Données sauvegardées]'
+
+    def display_load(self):
+        return '\n\t[données chargées]'

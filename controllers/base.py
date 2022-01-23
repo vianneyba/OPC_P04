@@ -42,11 +42,13 @@ class Controller:
         elif self.select == '8':
             self.pc.import_all_players()
             self.tc.import_all_tournament()
+            print(self.view.display_load())
         elif self.select == '9':
             for tournament in Tournament.all_tournaments:
                 self.tc.save(tournament)
             for player in Player.all_players:
                 self.pc.save(player)
+            print(self.view.display_save())
         elif self.select == '10':
             cmd = 'flake8 --format=html --htmldir=flake8_report'
             os.system(cmd)
@@ -83,17 +85,20 @@ class Controller:
         if self.select == '1':
             self.tc.add_tournament()
         elif self.select == '2':
-            self.tc.view_tournaments()
-            try:
-                number = int(self.view.select_tournament()) - 1
-                self.tournament_selected = Tournament.all_tournaments[number]
-                self.menu = self.view.display_edit_tournament_menu(
-                    is_close=self.tournament_selected.is_finish(),
-                    end_player=self.tournament_selected.count_players() >= DEFAULT_NBR_PLAYER,
-                    nb_round=len(self.tournament_selected.rounds))
-                self.page = 'edit_tournament'
-            except ValueError:
-                self.go_menu_home()
+            if len(Tournament.all_tournaments) > 0:
+                self.tc.view_tournaments()
+                try:
+                    select_id = int(self.view.select_tournament()) - 1
+                    if len(Tournament.all_tournaments) > select_id:
+                        number = select_id
+                        self.tournament_selected = Tournament.all_tournaments[number]
+                        self.menu = self.view.display_edit_tournament_menu(
+                            is_close=self.tournament_selected.is_finish(),
+                            end_player=self.tournament_selected.count_players() >= DEFAULT_NBR_PLAYER,
+                            nb_round=len(self.tournament_selected.rounds))
+                        self.page = 'edit_tournament'
+                except ValueError:
+                    self.go_menu_home()
         elif self.select == 'q':
             self.tournament_selected = None
             self.go_menu_home()
@@ -142,8 +147,8 @@ class Controller:
             self.tournament_selected.place = self.tc.field_place(
                 self.tournament_selected.place)
         elif self.select == '6':
-            self.tournament_selected.start_date = self.tc.field_start_date(
-                self.tournament_selected.start_date)
+            start_date = self.tc.field_start_date(self.tournament_selected.start_date)
+            self.tournament_selected.set_start_date(start_date)
         elif self.select == '7':
             self.tournament_selected.nbr_days = self.tc.field_nbr_days(
                 self.tournament_selected.nbr_days)
@@ -153,7 +158,7 @@ class Controller:
         elif self.select == '9':
             self.tc.create_round(self.tournament_selected)
         elif self.select == '10':
-            self.change_player_rating(self.tournament_selected.get_players())
+            self.tc.change_player_rating(self.tournament_selected.get_players())
         elif self.select == 'q':
             self.tournament_selected = None
             self.go_menu_home()

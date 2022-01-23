@@ -12,7 +12,10 @@ class Tournament:
         self.rounds = []
         self.players = []
         for attr_name, attr_value in tournament_dic.items():
-            setattr(self, attr_name, attr_value)
+            if attr_name == 'start_date':
+                self.start_date = parse(attr_value, fuzzy=False)
+            else:
+                setattr(self, attr_name, attr_value)
         self.all_tournaments.append(self)
 
     def serialize(self):
@@ -24,7 +27,7 @@ class Tournament:
             'id': self.id,
             'name': self.name,
             'place': self.place,
-            'start_date': self.start_date,
+            'start_date': self.start_date.strftime("%d/%m/%Y"),
             'nbr_days': self.nbr_days,
             'nbr_rounds': self.nbr_rounds,
             'ctr_time': self.ctr_time,
@@ -90,10 +93,12 @@ class Tournament:
     def add_round(self, round):
         self.rounds.append(round)
 
-    def end_date(self):
-        d = parse(self.start_date, fuzzy=False)
-        new_d = d + timedelta(days=self.nbr_days-1)
+    def get_end_date(self):
+        new_d = self.start_date + timedelta(days=self.nbr_days-1)
         return new_d.strftime("%d/%m/%Y")
+
+    def get_start_date(self):
+        return self.start_date.strftime("%d/%m/%Y")
 
     def get_rounds(self):
         return self.rounds
@@ -105,3 +110,6 @@ class Tournament:
                 list_matches.append(match)
 
         return list_matches
+
+    def set_start_date(self, start_date):
+        self.start_date = parse(start_date, fuzzy=False)

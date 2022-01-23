@@ -122,7 +122,7 @@ class TournamentController:
 
         tournament.name = self.field_name()
         tournament.place = self.field_place()
-        tournament.start_date = self.field_start_date()
+        tournament.set_start_date(self.field_start_date())
         tournament.nbr_days = self.field_nbr_days()
         tournament.nbr_rounds = self.field_nbr_rounds()
         tournament.ctr_time = self.field_ctr_time()
@@ -140,7 +140,7 @@ class TournamentController:
             t.id = tournament['id']
             t.name = tournament['name']
             t.place = tournament['place']
-            t.start_date = tournament['start_date']
+            t.set_start_date(tournament['start_date'])
             t.nbr_days = tournament['nbr_days']
             t.nbr_rounds = tournament['nbr_rounds']
             t.ctr_time = tournament['ctr_time']
@@ -207,7 +207,7 @@ class TournamentController:
         pc = PlayerController(self.view)
         for player in players:
             txt = f'{player.firstname} {player.lastname} ({player.points} pts)'
-            self.view.headings(txt)
+            print(self.view.headings(txt))
             player.rating = pc.field_rating(
                 player.rating
             )
