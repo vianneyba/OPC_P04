@@ -57,18 +57,26 @@ Le menu "1 Créer un tournoi" ou "3-1 Créer un tournoi" permet de crée un tour
 
 *Entrer le nom du tournoi: tournoi du 20/01/2022*
 
+***
 *Entrer le lieu du tournoi: lille*
+<!-- texte en commentaire -->
 *Entrer la date du début du tournoi (jj/mm/yyyy): 20/01/2022*
+<!-- texte en commentaire -->
 *Combien de jour durera la tournoi [1]: *
+<!-- texte en commentaire -->
 *Nombre de tours [4]: *
+<!-- texte en commentaire -->
 *Côntrole du temps ([1] Bullet, [2] Blitz, [3] Coup rapide): 1*
+<!-- texte en commentaire -->
 *Entrer une description: a la maire de wazemme*
+***
 
 il est aussi possible d'ajouter les 8 participants au tournoi dans cette section.
 
 ## Ajouter un joueur
 Le menu "2-1 Ajouter un joueur" permet d'ajouter des joueurs sans les lier a un tournoi.
 Avec le menu "3-2-8 Ajouter des joueurs" il est aussi possible d'ajouter des joueurs directement dans le tournoi précédemment selectionné.
+
 ***
 *entrer son prénom: bruno*
 <!-- texte en commentaire -->
