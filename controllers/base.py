@@ -2,7 +2,7 @@ from controllers.player import PlayerController
 from controllers.tournament import TournamentController
 from models.tournament import Tournament
 from models.player import Player
-from config import DEFAULT_NBR_PLAYER
+from config import DEFAULT_NBR_PLAYER as NBR_PLAYER
 import os
 
 
@@ -15,7 +15,7 @@ class Controller:
         self.select = 0
         self.page = 'home'
         self.player_selected = None
-        self.tournament_selected = None
+        self.ts = None
 
     def go_menu_home(self):
         self.page = 'home'
@@ -53,7 +53,7 @@ class Controller:
             cmd = 'flake8 --format=html --htmldir=flake8_report'
             os.system(cmd)
             self.go_menu_home()
-        elif self.select == 'q':
+        elif self.select.lower() == 'q':
             self.page = 'quit'
 
     def menu_player(self):
@@ -77,7 +77,7 @@ class Controller:
                 self.go_menu_player()
         elif self.select == '5':
             self.pc.import_all_players()
-        elif self.select == 'q':
+        elif self.select.lower() == 'q':
             self.player_selected = None
             self.go_menu_home()
 
@@ -91,16 +91,16 @@ class Controller:
                     select_id = int(self.view.select_tournament()) - 1
                     if len(Tournament.all_tournaments) > select_id:
                         number = select_id
-                        self.tournament_selected = Tournament.all_tournaments[number]
+                        self.ts = Tournament.all_tournaments[number]
                         self.menu = self.view.display_edit_tournament_menu(
-                            is_close=self.tournament_selected.is_finish(),
-                            end_player=self.tournament_selected.count_players() >= DEFAULT_NBR_PLAYER,
-                            nb_round=len(self.tournament_selected.rounds))
+                            is_close=self.ts.is_finish(),
+                            end_player=self.ts.count_players() >= NBR_PLAYER,
+                            nb_round=len(self.ts.rounds))
                         self.page = 'edit_tournament'
                 except ValueError:
                     self.go_menu_home()
-        elif self.select == 'q':
-            self.tournament_selected = None
+        elif self.select.lower() == 'q':
+            self.ts = None
             self.go_menu_home()
 
     def menu_edit_player(self):
@@ -120,47 +120,47 @@ class Controller:
             self.player_selected.rating = self.pc.field_rating(
                 self.player_selected.rating
             )
-        elif self.select == 'q':
+        elif self.select.lower() == 'q':
             self.go_menu_player()
         if self.player_selected:
             self.view.display_list_players([self.player_selected])
 
     def menu_edit_tournament(self):
         if self.select == '1':
-            if not self.tournament_selected.is_finish():
-                self.tc.close_round(self.tournament_selected.get_last_round())
-                if self.tournament_selected.nbr_rounds > len(self.tournament_selected.rounds):
+            if not self.ts.is_finish():
+                self.tc.close_round(self.ts.get_last_round())
+                if self.ts.nbr_rounds > len(self.ts.rounds):
                     self.tc.create_round(
-                        self.tournament_selected,
-                        f'round {len(self.tournament_selected.rounds)+1}',
+                        self.ts,
+                        f'round {len(self.ts.rounds)+1}',
                         first=False)
         elif self.select == '2':
-            self.tournament_selected.name = self.tc.field_name(
-                self.tournament_selected.name)
+            self.ts.name = self.tc.field_name(
+                self.ts.name)
         elif self.select == '3':
-            self.tournament_selected.description = self.tc.field_description(
-                self.tournament_selected.description)
+            self.ts.description = self.tc.field_description(
+                self.ts.description)
         elif self.select == '4':
-            self.tournament_selected.ctr_time = self.tc.field_ctr_time(
-                self.tournament_selected.ctr_time)
+            self.ts.ctr_time = self.tc.field_ctr_time(
+                self.ts.ctr_time)
         elif self.select == '5':
-            self.tournament_selected.place = self.tc.field_place(
-                self.tournament_selected.place)
+            self.ts.place = self.tc.field_place(
+                self.ts.place)
         elif self.select == '6':
-            start_date = self.tc.field_start_date(self.tournament_selected.start_date)
-            self.tournament_selected.set_start_date(start_date)
+            start_date = self.tc.field_start_date(self.ts.start_date)
+            self.ts.set_start_date(start_date)
         elif self.select == '7':
-            self.tournament_selected.nbr_days = self.tc.field_nbr_days(
-                self.tournament_selected.nbr_days)
+            self.ts.nbr_days = self.tc.field_nbr_days(
+                self.ts.nbr_days)
         elif (self.select == '8' and
-                self.tournament_selected.count_players() < DEFAULT_NBR_PLAYER):
-            self.tc.add_player(self.tournament_selected, self.view, add=True)
+                self.ts.count_players() < NBR_PLAYER):
+            self.tc.add_player(self.ts, self.view, add=True)
         elif self.select == '9':
-            self.tc.create_round(self.tournament_selected)
+            self.tc.create_round(self.ts)
         elif self.select == '10':
-            self.tc.change_player_rating(self.tournament_selected.get_players())
-        elif self.select == 'q':
-            self.tournament_selected = None
+            self.tc.change_player_rating(self.ts.get_players())
+        elif self.select.lower() == 'q':
+            self.ts = None
             self.go_menu_home()
 
     def menu_rapport_player(self):
@@ -170,11 +170,11 @@ class Controller:
         elif self.select == '2':
             players = self.pc.get_all_players_by_name()
             self.view.display_list_players(players)
-        elif self.select == 'q':
+        elif self.select.lower() == 'q':
             self.go_menu_rapport()
 
     def menu_rapport_tournament_player(self):
-        players = self.tournament_selected.get_players()
+        players = self.ts.get_players()
         if self.select == '1':
             players = sorted(players, key=lambda x: x.rating)
             self.view.display_list_players(players)
@@ -183,7 +183,7 @@ class Controller:
             players = sorted(players, key=lambda x: x.lastname)
             self.view.display_list_players(players)
             input("suite")
-        elif self.select == 'q':
+        elif self.select.lower() == 'q':
             self.go_menu_rapport()
 
     def menu_rapport(self):
@@ -192,7 +192,7 @@ class Controller:
             self.page = 'rapport_player'
 
         elif self.select == '2':
-            self.tournament_selected = self.tc.select_tournament()
+            self.ts = self.tc.select_tournament()
             self.menu = self.view.display_menu_order()
             self.page = 'rapport_tournament_player'
 
@@ -221,7 +221,7 @@ class Controller:
                     break
                 else:
                     break
-        elif self.select == 'q':
+        elif self.select.lower() == 'q':
             self.go_menu_home()
 
     def run(self):

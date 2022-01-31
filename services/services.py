@@ -32,7 +32,9 @@ class PlayerManagement:
     @classmethod
     def get_by_lastname_and_firstname(self, firstname, lastname):
         q = Query()
-        return self.table.search((q.lastname == lastname) & (q.firstname == firstname))[0]
+        return (
+                self.table.search((q.lastname == lastname)
+                                  & (q.firstname == firstname))[0])
 
     @classmethod
     def save(self, user):
